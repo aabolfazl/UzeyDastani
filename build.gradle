@@ -25,6 +25,7 @@ allprojects {
 project.ext {
     navigation_version = "2.4.0-alpha01"
     retrofit_version = "2.9.0"
+    dagger_version = "2.35.1"
 }
 
 task clean(type: Delete) {
