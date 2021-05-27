@@ -4,12 +4,11 @@ import dagger.Module
 import dagger.Provides
 import me.akay.uzaydestan.api.ApiService
 import me.akay.uzaydestan.api.NetworkModule
-import me.akay.uzaydestan.main.MainModule
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module(
-    includes = [NetworkModule::class, MainModule::class, ActivityBuilderModule::class, FragmentBuilderModule::class]
+    includes = [NetworkModule::class, ViewModelModule::class, ActivityBuilderModule::class, FragmentBuilderModule::class]
 )
 class ApplicationModule {
     @Singleton
