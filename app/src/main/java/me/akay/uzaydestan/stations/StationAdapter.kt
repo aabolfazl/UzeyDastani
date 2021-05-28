@@ -1,4 +1,4 @@
-package me.akay.uzaydestan.main
+package me.akay.uzaydestan.stations
 
 import android.view.LayoutInflater
 import android.view.View

@@ -9,7 +9,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SpaceStationRepository @Inject constructor(private val apiService: ApiService) {
+class ApplicationRepository @Inject constructor(private val apiService: ApiService) {
     private val TAG = "SpaceStationRepository"
 
     fun loadData() {

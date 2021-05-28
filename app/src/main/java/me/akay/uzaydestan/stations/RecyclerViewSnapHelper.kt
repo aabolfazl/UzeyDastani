@@ -1,4 +1,4 @@
-package me.akay.uzaydestan.main
+package me.akay.uzaydestan.stations
 
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView

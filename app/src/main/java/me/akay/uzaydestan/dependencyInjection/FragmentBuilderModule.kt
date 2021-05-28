@@ -2,13 +2,13 @@ package me.akay.uzaydestan.dependencyInjection
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import me.akay.uzaydestan.main.MainFragment
 import me.akay.uzaydestan.spacecraft.SpacecraftFragment
+import me.akay.uzaydestan.stations.StationFragment
 
 @Module
 abstract class FragmentBuilderModule {
     @ContributesAndroidInjector
-    abstract fun contributeMainFragment(): MainFragment
+    abstract fun contributeMainFragment(): StationFragment
 
     @ContributesAndroidInjector
     abstract fun contributeSpaceCraftFragment(): SpacecraftFragment

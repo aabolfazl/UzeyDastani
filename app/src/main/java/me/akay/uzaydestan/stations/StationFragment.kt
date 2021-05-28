@@ -1,4 +1,4 @@
-package me.akay.uzaydestan.main
+package me.akay.uzaydestan.stations
 
 import android.os.Bundle
 import android.util.Log
@@ -10,16 +10,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import me.akay.uzaydestan.R
-import me.akay.uzaydestan.main.RecyclerViewSnapHelper.OnSelectedItemChange
+import me.akay.uzaydestan.stations.RecyclerViewSnapHelper.OnSelectedItemChange
 import javax.inject.Inject
 
-class MainFragment : DaggerFragment() {
+class StationFragment : DaggerFragment() {
     private val TAG = "MainFragment"
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val viewModel: MainViewModel by viewModels {
+    private val viewModel: StationViewModel by viewModels {
         viewModelFactory
     }
 

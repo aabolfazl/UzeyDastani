@@ -1,15 +1,15 @@
-package me.akay.uzaydestan.main
+package me.akay.uzaydestan.stations
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import me.akay.uzaydestan.datamodels.SpaceStation
-import me.akay.uzaydestan.repository.SpaceStationRepository
+import me.akay.uzaydestan.repository.ApplicationRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MainViewModel @Inject constructor(private val repository: SpaceStationRepository) : ViewModel() {
+class StationViewModel @Inject constructor(private val repository: ApplicationRepository) : ViewModel() {
     private val TAG = "MainViewModel"
 
     val spaceStations: MutableLiveData<List<SpaceStation>> by lazy {

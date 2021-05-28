@@ -10,6 +10,6 @@
         android:label="FavoriteFragment" />
     <fragment
         android:id="@+id/mainFragment"
-        android:name="me.akay.uzaydestan.main.MainFragment"
+        android:name="me.akay.uzaydestan.stations.StationFragment"
         android:label="MainFragment" />
 </navigation>
