@@ -10,7 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import me.akay.uzaydestan.R
 import me.akay.uzaydestan.datamodels.SpaceStation
 
-class StationAdapter(private val spaceStations: List<SpaceStation>) : RecyclerView.Adapter<StationAdapter.StationViewHolder>() {
+class StationAdapter : RecyclerView.Adapter<StationAdapter.StationViewHolder>() {
+    private var spaceStations: List<SpaceStation> = ArrayList();
+
+    fun setStations(list: List<SpaceStation>) {
+        spaceStations = list
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StationViewHolder {
         val view = LayoutInflater.from(parent.context)

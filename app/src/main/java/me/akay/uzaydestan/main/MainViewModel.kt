@@ -1,7 +1,9 @@
 package me.akay.uzaydestan.main
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import me.akay.uzaydestan.datamodels.SpaceStation
 import me.akay.uzaydestan.repository.SpaceStationRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -10,9 +12,24 @@ import javax.inject.Singleton
 class MainViewModel @Inject constructor(private val repository: SpaceStationRepository) : ViewModel() {
     private val TAG = "MainViewModel"
 
-    fun load() {
+    val spaceStations: MutableLiveData<List<SpaceStation>> by lazy {
+        MutableLiveData<List<SpaceStation>>()
+    }
+
+    fun loadSpaceStationList() {
         Log.i(TAG, "load: ")
         repository.loadData()
+
+        val listOf = listOf(
+            SpaceStation("Abolfazl", 4f, 6f, 500, 5222, 52),
+            SpaceStation("Abbasi", 4f, 6f, 605, 5222, 52),
+            SpaceStation("Dar", 4f, 6f, 23423, 5222, 52),
+            SpaceStation("Akay", 4f, 6f, 463, 5222, 52),
+            SpaceStation("Bekliyorom", 4f, 6f, 1247, 5222, 52),
+            SpaceStation("Soyle", 4f, 6f, 57446, 5222, 52),
+        )
+
+        spaceStations.value = listOf
     }
 
     override fun onCleared() {
