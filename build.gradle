@@ -27,6 +27,7 @@ project.ext {
     retrofit_version = "2.9.0"
     dagger_version = "2.35.1"
     lifecycle_version = '2.2.0'
+    room_version = '2.3.0'
 }
 
 task clean(type: Delete) {
