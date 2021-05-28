@@ -3,4 +3,6 @@
     <string name="spacecraft">Spacecraft</string>
     <string name="favorite">Favorites</string>
     <string name="empty_string">No stations are favorite yet!</string>
+    <string name="search">Search</string>
+    <string name="space_craft_name">WhartonX</string>
 </resources>
