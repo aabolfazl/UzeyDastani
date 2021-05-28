@@ -4,5 +4,6 @@
     <string name="favorite">Favorites</string>
     <string name="empty_string">No stations are favorite yet!</string>
     <string name="search">Search</string>
-    <string name="space_craft_name">WhartonX</string>
+    <string name="space_craft_name">Falcon 9</string>
+    <string name="let_s_go">Let\'s go…</string>
 </resources>
