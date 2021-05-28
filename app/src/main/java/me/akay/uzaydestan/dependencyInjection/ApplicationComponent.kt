@@ -12,10 +12,12 @@ import javax.inject.Singleton
     modules = [AndroidInjectionModule::class, ApplicationModule::class]
 )
 interface ApplicationComponent : AndroidInjector<ApplicationLoader> {
+    override fun inject(application: ApplicationLoader)
+
     @Component.Builder
     interface Builder {
         @BindsInstance
-        fun application(application: ApplicationLoader?): Builder
+        fun application(application: ApplicationLoader): Builder
 
         fun build(): ApplicationComponent
     }
