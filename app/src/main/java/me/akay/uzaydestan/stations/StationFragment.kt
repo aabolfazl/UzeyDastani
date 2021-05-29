@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import me.akay.uzaydestan.R
 import me.akay.uzaydestan.data.Spacecraft
+import me.akay.uzaydestan.helper.Status
 import me.akay.uzaydestan.stations.RecyclerViewSnapHelper.OnSelectedItemChange
 import javax.inject.Inject
 
@@ -32,12 +33,11 @@ class StationFragment : DaggerFragment() {
     private var adapter: StationAdapter = StationAdapter()
     private var currentPosition: Int = 0
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.loadSpaceStationList()
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_station, container, false)
 
         val snapHelper = RecyclerViewSnapHelper(object : OnSelectedItemChange {
@@ -70,8 +70,19 @@ class StationFragment : DaggerFragment() {
             bindSpaceCraft(spacecraft)
         })
 
-        viewModel.spaceStations.observe(viewLifecycleOwner, { stationList ->
-            adapter.setStations(stationList)
+        viewModel.spaceStations.observe(viewLifecycleOwner, { result ->
+            Log.i(TAG, "onViewCreated: ")
+            when (result.status) {
+                Status.SUCCESS -> {
+                    adapter.setStations(result.data!!)
+                }
+                Status.ERROR -> {
+
+                }
+                Status.LOADING -> {
+
+                }
+            }
         })
     }
 
@@ -84,9 +95,9 @@ class StationFragment : DaggerFragment() {
 
     private fun goNextStation() {
         val newPos = currentPosition + 1
-        if (newPos < viewModel.spaceStations.value?.size ?: 0) {
-            scrollTpStation(newPos)
-        }
+//        if (newPos < viewModel.spaceStations.value?.size ?: 0) {
+//            scrollTpStation(newPos)
+//        }
     }
 
     private fun goPreviousStation() {
