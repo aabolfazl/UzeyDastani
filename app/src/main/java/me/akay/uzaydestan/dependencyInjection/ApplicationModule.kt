@@ -8,13 +8,17 @@ import me.akay.uzaydestan.ApplicationLoader
 import me.akay.uzaydestan.api.ApiService
 import me.akay.uzaydestan.api.NetworkModule
 import me.akay.uzaydestan.data.ApplicationDatabase
+import me.akay.uzaydestan.data.SpaceStationDAO
 import me.akay.uzaydestan.data.SpacecraftDAO
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
-@Module(
-    includes = [NetworkModule::class, ViewModelModule::class, ActivityBuilderModule::class, FragmentBuilderModule::class]
-)
+@Module(includes = [
+    NetworkModule::class,
+    ViewModelModule::class,
+    ActivityBuilderModule::class,
+    FragmentBuilderModule::class
+])
 class ApplicationModule {
     @Singleton
     @Provides
@@ -26,14 +30,20 @@ class ApplicationModule {
     @Provides
     fun provideDatabase(context: Context): ApplicationDatabase {
         return Room.databaseBuilder(context, ApplicationDatabase::class.java, "uzay-db")
-            .fallbackToDestructiveMigration()
-            .build()
+                .fallbackToDestructiveMigration()
+                .build()
     }
 
     @Singleton
     @Provides
     fun provideSpacecraftDao(db: ApplicationDatabase): SpacecraftDAO {
         return db.spacecraftDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideSpaceStationDao(db: ApplicationDatabase): SpaceStationDAO {
+        return db.spaceStationDAO()
     }
 
     @Singleton
