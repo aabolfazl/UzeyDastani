@@ -6,4 +6,4 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "spacecraft")
 data class Spacecraft(
 
-    @PrimaryKey val name: String, val durability: Int, val speed: Int, val capacity: Int)
+    @PrimaryKey val name: String, val durability: Int, val speed: Int, val capacity: Int, val damage: Int)

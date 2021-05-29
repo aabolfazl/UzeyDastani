@@ -37,7 +37,7 @@ class ApplicationRepository @Inject constructor(private val apiService: ApiServi
     }
 
     fun saveSpacecraft(name: String, durability: Int, speed: Int, capacity: Int, result: MediatorLiveData<Resource<Boolean?>>): Disposable {
-        val spacecraft = Spacecraft(name, durability, speed, capacity)
+        val spacecraft = Spacecraft(name, durability, speed, capacity, 100)
         return spacecraftDao.insert(spacecraft)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
