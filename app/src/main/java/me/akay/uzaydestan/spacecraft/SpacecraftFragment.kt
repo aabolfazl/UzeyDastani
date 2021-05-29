@@ -34,7 +34,7 @@ class SpacecraftFragment : DaggerFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_spacecraft, container, false)
 
-        scoreTextView = view.findViewById(R.id.main_damage_capacity)
+        scoreTextView = view.findViewById(R.id.tv_spacecraft_score)
         spaceCraftNameEditText = view.findViewById(R.id.et_spacecraft_name)
 
         durabilitySeekBar = view.findViewById(R.id.sb_spacecraft_durability)

@@ -7,7 +7,7 @@
     android:background="@color/main_root_background">
 
     <TextView
-        android:id="@+id/tv_spacecraft_score"
+        android:id="@+id/tv_spacecraft_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -18,7 +18,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/view"
-        app:layout_constraintEnd_toStartOf="@+id/main_damage_capacity"
+        app:layout_constraintEnd_toStartOf="@+id/tv_spacecraft_score"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -26,7 +26,7 @@
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
-        android:id="@+id/main_damage_capacity"
+        android:id="@+id/tv_spacecraft_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -39,11 +39,11 @@
         android:textColor="@color/white"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_spacecraft_score"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_spacecraft_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tv_spacecraft_score"
-        app:layout_constraintTop_toTopOf="@+id/tv_spacecraft_score"
+        app:layout_constraintStart_toEndOf="@+id/tv_spacecraft_title"
+        app:layout_constraintTop_toTopOf="@+id/tv_spacecraft_title"
         tool:text="15" />
 
     <View
@@ -58,7 +58,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_spacecraft_score" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_spacecraft_title" />
 
     <EditText
         android:id="@+id/et_spacecraft_name"
