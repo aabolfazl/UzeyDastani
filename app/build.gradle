@@ -19,6 +19,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "BASE_URL", BASE_URL)
+        buildConfigField("String", "STATION_PATH", STATION_PATH)
 
     }
 
