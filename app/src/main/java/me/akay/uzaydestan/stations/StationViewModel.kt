@@ -3,6 +3,7 @@ package me.akay.uzaydestan.stations
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import me.akay.uzaydestan.data.Spacecraft
 import me.akay.uzaydestan.datamodels.SpaceStation
 import me.akay.uzaydestan.repository.ApplicationRepository
 import javax.inject.Inject
@@ -14,6 +15,14 @@ class StationViewModel @Inject constructor(private val repository: ApplicationRe
 
     val spaceStations: MutableLiveData<List<SpaceStation>> by lazy {
         MutableLiveData<List<SpaceStation>>()
+    }
+
+    val spacecraftLiveData: MutableLiveData<Spacecraft> by lazy {
+        MutableLiveData<Spacecraft>()
+    }
+
+    init {
+        spacecraftLiveData.value = repository.currentSpaceCraft
     }
 
     fun loadSpaceStationList() {

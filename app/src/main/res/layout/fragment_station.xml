@@ -98,7 +98,7 @@
         app:layout_constraintTop_toBottomOf="@+id/view" />
 
     <TextView
-        android:id="@+id/main_damage_capacity"
+        android:id="@+id/main_spacecraft_damage"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_detail_box"
@@ -123,11 +123,11 @@
         android:text="49s"
         android:textColor="@color/white"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/main_damage_capacity"
+        app:layout_constraintBottom_toBottomOf="@+id/main_spacecraft_damage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/main_damage_capacity"
-        app:layout_constraintTop_toTopOf="@+id/main_damage_capacity" />
+        app:layout_constraintStart_toEndOf="@+id/main_spacecraft_damage"
+        app:layout_constraintTop_toTopOf="@+id/main_spacecraft_damage" />
 
     <EditText
         android:id="@+id/editText"

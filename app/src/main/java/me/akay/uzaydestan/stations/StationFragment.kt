@@ -5,11 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import me.akay.uzaydestan.R
+import me.akay.uzaydestan.data.Spacecraft
 import me.akay.uzaydestan.stations.RecyclerViewSnapHelper.OnSelectedItemChange
 import javax.inject.Inject
 
@@ -24,10 +26,11 @@ class StationFragment : DaggerFragment() {
     }
 
     private lateinit var recyclerView: RecyclerView
+    private lateinit var spacecraftNameTextView: TextView
+    private lateinit var spacecraftDamageTextView: TextView
+
     private var adapter: StationAdapter = StationAdapter()
     private var currentPosition: Int = 0
-    private var stationSize: Int = 0
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +46,9 @@ class StationFragment : DaggerFragment() {
                 currentPosition = position
             }
         })
+
+        spacecraftNameTextView = view.findViewById(R.id.main_spaceCraft_name)
+        spacecraftDamageTextView = view.findViewById(R.id.main_spacecraft_damage)
 
         recyclerView = view.findViewById(R.id.main_recyclerView)
         recyclerView.adapter = adapter
@@ -60,15 +66,25 @@ class StationFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.spaceStations.observe(viewLifecycleOwner, {
-            adapter.setStations(it)
-            stationSize = it.size
+        viewModel.spacecraftLiveData.observe(viewLifecycleOwner, { spacecraft ->
+            bindSpaceCraft(spacecraft)
         })
+
+        viewModel.spaceStations.observe(viewLifecycleOwner, { stationList ->
+            adapter.setStations(stationList)
+        })
+    }
+
+    private fun bindSpaceCraft(spacecraft: Spacecraft?) {
+        if (spacecraft != null) {
+            spacecraftNameTextView.text = spacecraft.name
+            spacecraftDamageTextView.text = spacecraft.damage.toString()
+        }
     }
 
     private fun goNextStation() {
         val newPos = currentPosition + 1
-        if (newPos < stationSize) {
+        if (newPos < viewModel.spaceStations.value?.size ?: 0) {
             scrollTpStation(newPos)
         }
     }
