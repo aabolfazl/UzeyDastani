@@ -6,18 +6,18 @@ import me.akay.uzaydestan.datamodels.SpaceStation
 
 @Entity(tableName = "space_station")
 class SpaceStationEntity(
-        @PrimaryKey
-        val name: String,
-        val coordinateX: Float,
-        val coordinateY: Float,
-        var capacity: Int,
-        val stock: Int,
-        val need: Int,
-        val missionComplete: Boolean,
-        val isFavorite: Boolean
+    @PrimaryKey
+    var name: String,
+    var coordinateX: Float,
+    var coordinateY: Float,
+    var capacity: Int,
+    var stock: Int,
+    var need: Int,
+    var missionComplete: Boolean = false,
+    var isFavorite: Boolean = false
 ) {
-        constructor(model: SpaceStation) : this(
-                model.name, model.coordinateX, model.coordinateY, model.capacity,
-                model.stock, model.need, false, false
-        )
+    constructor(model: SpaceStation) : this(
+        model.name, model.coordinateX, model.coordinateY, model.capacity,
+        model.stock, model.need
+    )
 }

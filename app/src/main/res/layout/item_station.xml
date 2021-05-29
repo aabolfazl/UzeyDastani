@@ -33,12 +33,12 @@
         android:id="@+id/station_favorite_imageView"
         android:layout_width="52dp"
         android:layout_height="52dp"
+        android:scaleType="centerInside"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:src="@drawable/ic_favorite"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="#FFEB3B" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/station_name_textView"

@@ -11,12 +11,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import me.akay.uzaydestan.R
+import me.akay.uzaydestan.data.SpaceStationEntity
 import me.akay.uzaydestan.data.Spacecraft
 import me.akay.uzaydestan.helper.Status
 import me.akay.uzaydestan.stations.RecyclerViewSnapHelper.OnSelectedItemChange
 import javax.inject.Inject
 
-class StationFragment : DaggerFragment() {
+class StationFragment : DaggerFragment(), StationAdapterDelegate {
     private val TAG = "MainFragment"
 
     @Inject
@@ -30,7 +31,7 @@ class StationFragment : DaggerFragment() {
     private lateinit var spacecraftNameTextView: TextView
     private lateinit var spacecraftDamageTextView: TextView
 
-    private var adapter: StationAdapter = StationAdapter()
+    private var adapter: StationAdapter = StationAdapter(this)
     private var currentPosition: Int = 0
 
     override fun onCreateView(
@@ -114,5 +115,13 @@ class StationFragment : DaggerFragment() {
             recyclerView.scrollToPosition(pos)
         }
         currentPosition = pos
+    }
+
+    override fun onButtonClicked(station: SpaceStationEntity) {
+
+    }
+
+    override fun onFavoriteClicked(station: SpaceStationEntity) {
+        viewModel.didChangeFav(station)
     }
 }

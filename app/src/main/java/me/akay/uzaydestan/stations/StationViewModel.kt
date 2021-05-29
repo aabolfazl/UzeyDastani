@@ -11,7 +11,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class StationViewModel @Inject constructor(repository: ApplicationRepository) :
+class StationViewModel @Inject constructor(private val repository: ApplicationRepository) :
     ViewModel() {
     private val TAG = "MainViewModel"
 
@@ -28,6 +28,10 @@ class StationViewModel @Inject constructor(repository: ApplicationRepository) :
     init {
         spacecraftLiveData.value = repository.currentSpaceCraft
         compositeDisposable.add(repository.loadStationList(spaceStations))
+    }
+
+    fun didChangeFav(station: SpaceStationEntity) {
+        compositeDisposable.add(repository.toggleFavorite(station))
     }
 
     override fun onCleared() {

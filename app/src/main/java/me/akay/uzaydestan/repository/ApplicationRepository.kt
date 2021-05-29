@@ -48,29 +48,53 @@ class ApplicationRepository @Inject constructor(
     }
 
     fun loadStationList(result: MutableLiveData<Resource<List<SpaceStationEntity>>>): Disposable {
-        return stationDatabase.getCurrentSpacecraft()
-                .mergeWith(getStationsFromNetwork())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe {
-                    result.value = Resource.loading(null)
-                }
-                .subscribe({
-                    result.value = Resource.success(it)
-                }, { e ->
-                    Resource.error(e.message!!, null)
-                })
+        return stationDatabase.getSpaceStationList()
+            .mergeWith(getStationsFromNetwork())
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe {
+                result.value = Resource.loading(null)
+            }
+            .subscribe({
+                result.value = Resource.success(it)
+            }, { e ->
+                Resource.error(e.message!!, null)
+            })
+    }
+
+    fun loadFavoriteSpaceStationList(result: MutableLiveData<Resource<List<SpaceStationEntity>>>): Disposable {
+        return stationDatabase.getFavoriteSpaceStationList()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe {
+                result.value = Resource.loading(null)
+            }
+            .subscribe({
+                result.value = Resource.success(it)
+            }, { e ->
+                Resource.error(e.message!!, null)
+            })
     }
 
     private fun getStationsFromNetwork(path: String = BuildConfig.STATION_PATH): Completable {
         return stationNetworkStore.getStationList(path)
-                .map { entity ->
-                    val databaseEntity: ArrayList<SpaceStationEntity> = ArrayList(entity.size)
-                    for (item in entity) {
-                        databaseEntity.add(SpaceStationEntity(item))
-                    }
-                    return@map databaseEntity
+            .map { entity ->
+                val databaseEntity: ArrayList<SpaceStationEntity> = ArrayList(entity.size)
+                for (item in entity) {
+                    databaseEntity.add(SpaceStationEntity(item))
                 }
-                .flatMapCompletable { stations -> return@flatMapCompletable stationDatabase.insert(stations) }
+                return@map databaseEntity
+            }
+            .flatMapCompletable { stations ->
+                return@flatMapCompletable stationDatabase.insertOrUpdate(stations)
+            }
+    }
+
+    fun toggleFavorite(spaceStation: SpaceStationEntity): Disposable {
+        spaceStation.isFavorite = spaceStation.isFavorite.not()
+        return stationDatabase.updateSpaceStation(spaceStation)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe()
     }
 }
