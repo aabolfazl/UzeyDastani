@@ -14,8 +14,7 @@
         android:background="#F2F3F0"
         app:defaultNavHost="true"
         app:layout_constraintBottom_toTopOf="@id/activity_main_bottom_navigation"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/navigation_graph" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/activity_main_bottom_navigation"
