@@ -16,6 +16,15 @@ import javax.inject.Singleton
 class ApplicationRepository @Inject constructor(private val apiService: ApiService, private val spacecraftDao: SpacecraftDAO) {
     private val TAG = "SpaceStationRepository"
 
+    var currentSpaceCraft: Spacecraft? = spacecraftDao.getSpacecraft()
+        .subscribeOn(Schedulers.io())
+        .doOnError { t -> Log.e(TAG, "current space craft", t.cause) }
+        .blockingGet()
+
+    init {
+        Log.i(TAG, ": loaded $currentSpaceCraft")
+    }
+
     fun loadData() {
         val dis: Disposable = apiService.getSpaceStations("e7211664-cbb6-4357-9c9d-f12bf8bab2e2")
             .subscribeOn(Schedulers.io())
@@ -33,14 +42,11 @@ class ApplicationRepository @Inject constructor(private val apiService: ApiServi
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe {
-                Log.i("abbasiLog", "loading from rx: ")
                 result.value = Resource.loading(null)
             }
             .subscribe({
-                Log.i("abbasiLog", "success from rx: ")
                 result.value = Resource.success(true)
             }, { e ->
-                Log.i("abbasiLog", "error from rx: ")
                 Resource.error(e.message!!, null)
             })
     }

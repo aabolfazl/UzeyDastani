@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import dagger.android.support.DaggerFragment
 import me.akay.uzaydestan.R
 import me.akay.uzaydestan.helper.AndroidUtils
@@ -97,12 +98,17 @@ class SpacecraftFragment : DaggerFragment() {
     }
 
     private fun processSaveSpacecraft(resource: Resource<Boolean?>) {
-        if (resource.status == Status.SUCCESS) {
-            Toast.makeText(context, resource.status.toString(), Toast.LENGTH_SHORT)
-                .show()
-        } else if (resource.status == Status.ERROR) {
-            Toast.makeText(context, resource.message, Toast.LENGTH_SHORT)
-                .show()
+        when (resource.status) {
+            Status.LOADING -> {
+
+            }
+            Status.SUCCESS -> {
+                findNavController().navigate(R.id.mainFragment)
+            }
+            Status.ERROR -> {
+                Toast.makeText(context, resource.message, Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
     }
 }
