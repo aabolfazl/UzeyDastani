@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -30,7 +31,8 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
     private lateinit var recyclerView: RecyclerView
     private lateinit var spacecraftNameTextView: TextView
     private lateinit var spacecraftDamageTextView: TextView
-    private lateinit var currentSpacecraftTextView: TextView
+    private lateinit var currentStationTextView: TextView
+    private lateinit var currentStationFavImageView: ImageView
     private lateinit var progressBarView: View
     private lateinit var tryAgainView: View
     private lateinit var forwardView: View
@@ -54,7 +56,7 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
 
         spacecraftNameTextView = view.findViewById(R.id.tv_station_spacecraft)
         spacecraftDamageTextView = view.findViewById(R.id.main_spacecraft_damage)
-        currentSpacecraftTextView = view.findViewById(R.id.tv_station_current)
+        currentStationTextView = view.findViewById(R.id.tv_station_current)
         progressBarView = view.findViewById(R.id.pb_station)
 
         recyclerView = view.findViewById(R.id.station_recyclerView)
@@ -69,6 +71,9 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
 
         tryAgainView = view.findViewById(R.id.tv_station_tryAgain)
         tryAgainView.setOnClickListener { viewModel.getStationsList() }
+
+        currentStationFavImageView = view.findViewById(R.id.iv_station_current_favorite)
+        currentStationFavImageView.setOnClickListener { onFavoriteClicked(viewModel.currentSpaceStations.value?.data!!) }
 
         return view
     }
@@ -105,8 +110,12 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
 
         viewModel.currentSpaceStations.observe(viewLifecycleOwner, { result ->
             if (result.status == Status.SUCCESS) {
-                currentSpacecraftTextView.text = result.data?.name
-                currentSpacecraftTextView.visibility = View.VISIBLE
+                currentStationTextView.text = result.data?.name
+                val res = if (result.data!!.isFavorite) R.drawable.ic_favorite else R.drawable.ic_favorite_outline
+                currentStationFavImageView.setImageResource(res)
+
+                currentStationTextView.visibility = View.VISIBLE
+                currentStationFavImageView.visibility = View.VISIBLE
             }
         })
     }
