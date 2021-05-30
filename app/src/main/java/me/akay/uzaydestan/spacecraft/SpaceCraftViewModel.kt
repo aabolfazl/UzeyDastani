@@ -2,16 +2,14 @@ package me.akay.uzaydestan.spacecraft
 
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import io.reactivex.disposables.CompositeDisposable
+import me.akay.uzaydestan.dependencyInjection.BaseViewModel
 import me.akay.uzaydestan.helper.Resource
 import me.akay.uzaydestan.repository.ApplicationRepository
 import javax.inject.Inject
 
-class SpaceCraftViewModel @Inject constructor(private val repository: ApplicationRepository) : ViewModel() {
+class SpaceCraftViewModel @Inject constructor(private val repository: ApplicationRepository) : BaseViewModel() {
     private val TAG = "SpaceCraftViewModel"
 
-    private val compositeDisposable: CompositeDisposable = CompositeDisposable();
     val saveSpace = MediatorLiveData<Resource<Boolean?>>()
 
     fun currentScore(): Int = speed + capacity + durability
@@ -43,11 +41,6 @@ class SpaceCraftViewModel @Inject constructor(private val repository: Applicatio
     }
 
     fun saveSpaceCraft(name: String) {
-        compositeDisposable.add(repository.saveSpacecraft(name, durability, speed, capacity, saveSpace))
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.clear()
+        addDisposable(repository.saveSpacecraft(name, durability, speed, capacity, saveSpace))
     }
 }

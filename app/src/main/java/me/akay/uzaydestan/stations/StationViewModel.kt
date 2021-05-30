@@ -1,23 +1,19 @@
 package me.akay.uzaydestan.stations
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import me.akay.uzaydestan.data.SpaceStationEntity
 import me.akay.uzaydestan.data.SpacecraftEntity
+import me.akay.uzaydestan.dependencyInjection.BaseViewModel
 import me.akay.uzaydestan.helper.Resource
 import me.akay.uzaydestan.repository.ApplicationRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class StationViewModel @Inject constructor(private val repository: ApplicationRepository) :
-    ViewModel() {
+class StationViewModel @Inject constructor(private val repository: ApplicationRepository) : BaseViewModel() {
     private val TAG = "MainViewModel"
-
-    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     val spaceStations: MutableLiveData<Resource<List<SpaceStationEntity>>> = MutableLiveData()
     val currentSpaceStations: MutableLiveData<Resource<SpaceStationEntity>> = MutableLiveData()
@@ -25,17 +21,12 @@ class StationViewModel @Inject constructor(private val repository: ApplicationRe
 
     init {
         spacecraftEntityLiveData.value = repository.currentSpaceCraft
-        compositeDisposable.add(repository.loadCurrentStation(currentSpaceStations))
+        addDisposable(repository.loadCurrentStation(currentSpaceStations))
         getStationsList()
     }
 
     fun didChangeFav(station: SpaceStationEntity) {
-        compositeDisposable.add(repository.toggleFavorite(station))
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.clear()
+        addDisposable(repository.toggleFavorite(station))
     }
 
     fun travelToStation(station: SpaceStationEntity) {
@@ -46,7 +37,7 @@ class StationViewModel @Inject constructor(private val repository: ApplicationRe
     }
 
     fun getStationsList() {
-        compositeDisposable.add(repository.loadStationList(spaceStations))
+        addDisposable(repository.loadStationList(spaceStations))
     }
 
 }
