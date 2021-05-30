@@ -7,12 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import me.akay.uzaydestan.R
 import me.akay.uzaydestan.data.SpaceStationEntity
-import me.akay.uzaydestan.data.Spacecraft
+import me.akay.uzaydestan.data.SpacecraftEntity
 import me.akay.uzaydestan.helper.Status
 import me.akay.uzaydestan.stations.RecyclerViewSnapHelper.OnSelectedItemChange
 import javax.inject.Inject
@@ -67,7 +68,7 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.spacecraftLiveData.observe(viewLifecycleOwner, { spacecraft ->
+        viewModel.spacecraftEntityLiveData.observe(viewLifecycleOwner, { spacecraft ->
             bindSpaceCraft(spacecraft)
         })
 
@@ -85,12 +86,16 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
                 }
             }
         })
+
+        viewModel.currentSpaceStations.observe(viewLifecycleOwner, Observer { result ->
+            Log.i("abbasiLog", "onViewCreated: " + result.data?.name)
+        })
     }
 
-    private fun bindSpaceCraft(spacecraft: Spacecraft?) {
-        if (spacecraft != null) {
-            spacecraftNameTextView.text = spacecraft.name
-            spacecraftDamageTextView.text = spacecraft.damage.toString()
+    private fun bindSpaceCraft(spacecraftEntity: SpacecraftEntity?) {
+        if (spacecraftEntity != null) {
+            spacecraftNameTextView.text = spacecraftEntity.name
+            spacecraftDamageTextView.text = spacecraftEntity.damage.toString()
         }
     }
 
@@ -118,7 +123,7 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
     }
 
     override fun onButtonClicked(station: SpaceStationEntity) {
-
+        viewModel.travelToStation(station)
     }
 
     override fun onFavoriteClicked(station: SpaceStationEntity) {

@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable
 import me.akay.uzaydestan.data.SpaceStationEntity
-import me.akay.uzaydestan.data.Spacecraft
+import me.akay.uzaydestan.data.SpacecraftEntity
 import me.akay.uzaydestan.helper.Resource
 import me.akay.uzaydestan.repository.ApplicationRepository
 import javax.inject.Inject
@@ -21,13 +21,20 @@ class StationViewModel @Inject constructor(private val repository: ApplicationRe
         MutableLiveData<Resource<List<SpaceStationEntity>>>()
     }
 
-    val spacecraftLiveData: MutableLiveData<Spacecraft> by lazy {
-        MutableLiveData<Spacecraft>()
+    val currentSpaceStations: MutableLiveData<Resource<SpaceStationEntity>> by lazy {
+        MutableLiveData<Resource<SpaceStationEntity>>()
+    }
+
+    val spacecraftEntityLiveData: MutableLiveData<SpacecraftEntity> by lazy {
+        MutableLiveData<SpacecraftEntity>()
     }
 
     init {
-        spacecraftLiveData.value = repository.currentSpaceCraft
+        spacecraftEntityLiveData.value = repository.currentSpaceCraft
         compositeDisposable.add(repository.loadStationList(spaceStations))
+
+        repository.loadCurrentStation(currentSpaceStations)
+
     }
 
     fun didChangeFav(station: SpaceStationEntity) {
@@ -37,6 +44,13 @@ class StationViewModel @Inject constructor(private val repository: ApplicationRe
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()
+    }
+
+    fun travelToStation(station: SpaceStationEntity) {
+//        repository.updateCurrentStation(station.name)
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe()
     }
 
 }

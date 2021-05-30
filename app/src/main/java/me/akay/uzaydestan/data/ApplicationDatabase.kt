@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 
 @Database(entities = [
-    Spacecraft::class,
+    SpacecraftEntity::class,
     SpaceStationEntity::class
 ], version = 1,
         exportSchema = false)

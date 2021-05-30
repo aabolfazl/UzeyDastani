@@ -4,12 +4,13 @@ import android.util.Log
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import me.akay.uzaydestan.BuildConfig
 import me.akay.uzaydestan.data.SpaceStationEntity
-import me.akay.uzaydestan.data.Spacecraft
+import me.akay.uzaydestan.data.SpacecraftEntity
 import me.akay.uzaydestan.helper.Resource
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -22,9 +23,9 @@ class ApplicationRepository @Inject constructor(
 ) {
     private val TAG = "SpaceStationRepository"
 
-    var currentSpaceCraft: Spacecraft? = getCurrentSpacecraft()
+    var currentSpaceCraft: SpacecraftEntity? = getCurrentSpacecraft()
 
-    private fun getCurrentSpacecraft(): Spacecraft? {
+    private fun getCurrentSpacecraft(): SpacecraftEntity? {
         return spacecraftDatabase.getCurrentSpacecraft()
             .subscribeOn(Schedulers.io())
             .doOnError { t -> Log.e(TAG, "current space craft", t.cause) }
@@ -32,7 +33,7 @@ class ApplicationRepository @Inject constructor(
     }
 
     fun saveSpacecraft(name: String, durability: Int, speed: Int, capacity: Int, result: MediatorLiveData<Resource<Boolean?>>): Disposable {
-        val spacecraft = Spacecraft(name, durability, speed, capacity, 100)
+        val spacecraft = SpacecraftEntity(name, durability, speed, capacity, 100)
         return spacecraftDatabase.insert(spacecraft)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -51,6 +52,21 @@ class ApplicationRepository @Inject constructor(
         return stationDatabase.getSpaceStationList()
             .mergeWith(getStationsFromNetwork())
             .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe {
+                result.value = Resource.loading(null)
+            }
+            .subscribe({
+                result.value = Resource.success(it)
+            }, { e ->
+                Resource.error(e.message!!, null)
+            })
+    }
+
+    fun loadCurrentStation(result: MutableLiveData<Resource<SpaceStationEntity>>): Disposable {
+        return spacecraftDatabase.getCurrentSpacecraft()
+            .subscribeOn(Schedulers.io())
+            .flatMap { spacecraft -> getCurrentSpaceStation(spacecraft.currentStation) }
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe {
                 result.value = Resource.loading(null)
@@ -88,6 +104,7 @@ class ApplicationRepository @Inject constructor(
             }
             .flatMapCompletable { stations ->
                 return@flatMapCompletable stationDatabase.insertOrUpdate(stations)
+                    .mergeWith(updateCurrentStation(stations[0].name, true))
             }
     }
 
@@ -97,5 +114,13 @@ class ApplicationRepository @Inject constructor(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe()
+    }
+
+    private fun getCurrentSpaceStation(name: String?): Maybe<SpaceStationEntity> {
+        return if (name != null) stationDatabase.findSpaceStationByName(name) else Maybe.empty()
+    }
+
+    fun updateCurrentStation(name: String, remote: Boolean = false): Completable {
+        return if (currentSpaceCraft?.currentStation == null || !remote) spacecraftDatabase.updateCurrentStation(name) else Completable.complete()
     }
 }

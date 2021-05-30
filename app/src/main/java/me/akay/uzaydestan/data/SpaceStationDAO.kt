@@ -2,10 +2,11 @@ package me.akay.uzaydestan.data
 
 import androidx.room.*
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 
 @Dao
 interface SpaceStationDAO {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(stations: List<SpaceStationEntity>)
 
     @Update
@@ -22,5 +23,8 @@ interface SpaceStationDAO {
 
     @Query("SELECT * FROM space_station WHERE isFavorite")
     fun getFavoriteSpaceStationList(): Flowable<List<SpaceStationEntity>>
+
+    @Query("SELECT * FROM space_station WHERE name == :stationName")
+    fun findStationByName(stationName: String): Maybe<SpaceStationEntity>
 
 }

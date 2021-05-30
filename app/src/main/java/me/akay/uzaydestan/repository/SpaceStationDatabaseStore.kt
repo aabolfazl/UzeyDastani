@@ -2,6 +2,7 @@ package me.akay.uzaydestan.repository
 
 import io.reactivex.Completable
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 import me.akay.uzaydestan.data.SpaceStationDAO
 import me.akay.uzaydestan.data.SpaceStationEntity
 import javax.inject.Inject
@@ -23,6 +24,10 @@ class SpaceStationDatabaseStore @Inject constructor(
 
     fun getSpaceStationList(): Flowable<List<SpaceStationEntity>> {
         return dao.getSpaceStationListFlowable()
+    }
+
+    fun findSpaceStationByName(name: String): Maybe<SpaceStationEntity> {
+        return dao.findStationByName(name)
     }
 
     fun updateSpaceStation(spaceStation: SpaceStationEntity): Completable = Completable.defer {

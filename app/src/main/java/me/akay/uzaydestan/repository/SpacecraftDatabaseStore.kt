@@ -2,21 +2,31 @@ package me.akay.uzaydestan.repository
 
 import io.reactivex.Completable
 import io.reactivex.Maybe
-import me.akay.uzaydestan.data.Spacecraft
 import me.akay.uzaydestan.data.SpacecraftDAO
+import me.akay.uzaydestan.data.SpacecraftEntity
 import javax.inject.Inject
 
 class SpacecraftDatabaseStore @Inject constructor(
-        private val dao: SpacecraftDAO
+    private val dao: SpacecraftDAO
 ) {
 
-    fun insert(spacecraft: Spacecraft): Completable = Completable.defer {
-        dao.insert(spacecraft)
+    fun insert(spacecraftEntity: SpacecraftEntity): Completable = Completable.defer {
+        dao.insert(spacecraftEntity)
         return@defer Completable.complete()
     }
 
-    fun getCurrentSpacecraft(): Maybe<Spacecraft> {
-        return dao.getSpacecraft()
+    fun update(spacecraftEntity: SpacecraftEntity): Completable = Completable.defer {
+        dao.update(spacecraftEntity)
+        return@defer Completable.complete()
+    }
+
+    fun updateCurrentStation(name: String): Completable = Completable.defer {
+        val spacecraft = dao.getSpacecraft()
+        return@defer update(spacecraft)
+    }
+
+    fun getCurrentSpacecraft(): Maybe<SpacecraftEntity> {
+        return dao.getSpacecraftMaybe()
     }
 
     fun deleteAll(): Completable = Completable.defer {
