@@ -26,7 +26,7 @@ class ApplicationRepository @Inject constructor(
     var currentSpaceCraft: SpacecraftEntity? = getCurrentSpacecraft()
 
     private fun getCurrentSpacecraft(): SpacecraftEntity? {
-        return spacecraftDatabase.getCurrentSpacecraft()
+        return spacecraftDatabase.getCurrentSpacecraftMaybe()
             .subscribeOn(Schedulers.io())
             .doOnError { t -> Log.e(TAG, "current space craft", t.cause) }
             .blockingGet()
@@ -52,6 +52,19 @@ class ApplicationRepository @Inject constructor(
         return stationDatabase.getSpaceStationList()
             .mergeWith(getStationsFromNetwork())
             .subscribeOn(Schedulers.io())
+            .filter { it.isNotEmpty() }
+            .map { entity ->
+                val currentSpacecraft = spacecraftDatabase.getCurrentSpacecraft()
+
+                Log.i(TAG, "loadStationList: $currentSpacecraft")
+                val currentStation = stationDatabase.findSpaceStationByName(currentSpacecraft.currentStation!!)
+
+                for (item in entity) {
+                    item.calculateStationDistance(currentStation)
+                }
+
+                return@map entity
+            }
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe {
                 result.value = Resource.loading(null)
@@ -117,7 +130,7 @@ class ApplicationRepository @Inject constructor(
     }
 
     private fun getCurrentSpaceStation(name: String?): Flowable<SpaceStationEntity> {
-        return if (name != null) stationDatabase.findSpaceStationByName(name) else Flowable.empty()
+        return if (name != null) stationDatabase.findSpaceStationByNameFlowable(name) else Flowable.empty()
     }
 
     fun updateCurrentStation(name: String, remote: Boolean = false): Completable {

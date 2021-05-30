@@ -25,7 +25,11 @@ class SpaceStationDatabaseStore @Inject constructor(
         return dao.getSpaceStationListFlowable()
     }
 
-    fun findSpaceStationByName(name: String): Flowable<SpaceStationEntity> {
+    fun findSpaceStationByNameFlowable(name: String): Flowable<SpaceStationEntity> {
+        return dao.findStationByNameFlowable(name)
+    }
+
+    fun findSpaceStationByName(name: String): SpaceStationEntity {
         return dao.findStationByName(name)
     }
 

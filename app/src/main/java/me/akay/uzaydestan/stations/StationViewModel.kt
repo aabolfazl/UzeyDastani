@@ -33,9 +33,8 @@ class StationViewModel @Inject constructor(private val repository: ApplicationRe
 
     init {
         spacecraftEntityLiveData.value = repository.currentSpaceCraft
-        getStationsList()
         compositeDisposable.add(repository.loadCurrentStation(currentSpaceStations))
-
+        getStationsList()
     }
 
     fun didChangeFav(station: SpaceStationEntity) {

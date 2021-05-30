@@ -9,6 +9,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import me.akay.uzaydestan.R
 import me.akay.uzaydestan.data.SpaceStationEntity
+import java.util.*
+import kotlin.collections.ArrayList
 
 class StationAdapter constructor(val stationAdapterDelegate: StationAdapterDelegate) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -69,6 +71,8 @@ class StationAdapter constructor(val stationAdapterDelegate: StationAdapterDeleg
 
             travelButton.setOnClickListener { stationAdapterDelegate.onButtonClicked(station) }
             favoriteImageView.setOnClickListener { stationAdapterDelegate.onFavoriteClicked(station) }
+
+            distanceTextView.text = String.format(Locale.US, "%.3f EUS", station.distanceToCurrent)
         }
     }
 

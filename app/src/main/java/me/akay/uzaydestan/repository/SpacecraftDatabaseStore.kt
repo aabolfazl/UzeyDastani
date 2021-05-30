@@ -22,13 +22,18 @@ class SpacecraftDatabaseStore @Inject constructor(
     }
 
     fun updateCurrentStation(name: String): Completable = Completable.defer {
-        val spacecraft = dao.getSpacecraft()
+        val spacecraft = getCurrentSpacecraft()
         spacecraft.currentStation = name
         return@defer update(spacecraft)
     }
 
-    fun getCurrentSpacecraft(): Maybe<SpacecraftEntity> {
+    fun getCurrentSpacecraftMaybe(): Maybe<SpacecraftEntity> {
         return dao.getSpacecraftMaybe()
+    }
+
+
+    fun getCurrentSpacecraft(): SpacecraftEntity {
+        return dao.getSpacecraft()
     }
 
     fun getCurrentSpacecraftFlowable(): Flowable<SpacecraftEntity> {

@@ -24,6 +24,9 @@ interface SpaceStationDAO {
     fun getFavoriteSpaceStationList(): Flowable<List<SpaceStationEntity>>
 
     @Query("SELECT * FROM space_station WHERE name == :stationName")
-    fun findStationByName(stationName: String): Flowable<SpaceStationEntity>
+    fun findStationByNameFlowable(stationName: String): Flowable<SpaceStationEntity>
+
+    @Query("SELECT * FROM space_station WHERE name == :stationName")
+    fun findStationByName(stationName: String): SpaceStationEntity
 
 }

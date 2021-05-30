@@ -1,8 +1,11 @@
 package me.akay.uzaydestan.data
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import me.akay.uzaydestan.datamodels.SpaceStation
+import me.akay.uzaydestan.helper.AndroidUtils
+import me.akay.uzaydestan.helper.Point
 
 @Entity(tableName = "space_station")
 class SpaceStationEntity(
@@ -16,6 +19,9 @@ class SpaceStationEntity(
     var missionComplete: Boolean = false,
     var isFavorite: Boolean = false
 ) {
+    @Ignore
+    var distanceToCurrent: Float = 0f
+
     constructor(model: SpaceStation) : this(
         model.name, model.coordinateX, model.coordinateY, model.capacity,
         model.stock, model.need
@@ -23,4 +29,13 @@ class SpaceStationEntity(
 
     fun isEarth(): Boolean =
         capacity == 0 && coordinateX == 0.0f && coordinateY == 0.0f && stock == 0 && need == 0
+
+    fun calculateStationDistance(current: SpaceStationEntity): Float {
+        distanceToCurrent = AndroidUtils.calculateDistance(
+            Point(current.coordinateX.toDouble(), current.coordinateY.toDouble()),
+            Point(coordinateX.toDouble(), coordinateY.toDouble())
+        ).toFloat()
+
+        return distanceToCurrent
+    }
 }

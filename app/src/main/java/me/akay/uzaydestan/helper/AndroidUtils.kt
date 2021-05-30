@@ -5,6 +5,8 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.view.View
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 class AndroidUtils {
     companion object {
@@ -26,6 +28,10 @@ class AndroidUtils {
                 }
             })
             animatorSet.start()
+        }
+
+        fun calculateDistance(a: Point, b: Point): Double {
+            return sqrt((a.x - b.x).pow(2.toDouble()) + (a.y - b.y).pow(2.toDouble()))
         }
     }
 }
