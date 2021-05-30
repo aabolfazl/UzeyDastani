@@ -22,6 +22,9 @@ class SpaceStationEntity(
     @Ignore
     var distanceToCurrent: Float = 0f
 
+    @Ignore
+    var isCurrent: Boolean = false
+
     constructor(model: SpaceStation) : this(
         model.name, model.coordinateX, model.coordinateY, model.capacity,
         model.stock, model.need
@@ -35,6 +38,8 @@ class SpaceStationEntity(
             Point(current.coordinateX.toDouble(), current.coordinateY.toDouble()),
             Point(coordinateX.toDouble(), coordinateY.toDouble())
         ).toFloat()
+
+        isCurrent = current.name.equals(name, true)
 
         return distanceToCurrent
     }

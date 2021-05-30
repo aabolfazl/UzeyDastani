@@ -65,6 +65,7 @@ class StationAdapter constructor(val stationAdapterDelegate: StationAdapterDeleg
             nameTextView.text = station.name
             capacityTextView.text = String.format(Locale.US, "%d/%d", station.capacity, station.need)
             travelButton.visibility = if (station.missionComplete) View.INVISIBLE else View.VISIBLE
+            travelButton.isEnabled = station.isCurrent.not()
 
             val res = if (station.isFavorite) R.drawable.ic_favorite else R.drawable.ic_favorite_outline
             favoriteImageView.setImageResource(res)
@@ -72,7 +73,8 @@ class StationAdapter constructor(val stationAdapterDelegate: StationAdapterDeleg
             travelButton.setOnClickListener { stationAdapterDelegate.onButtonClicked(station) }
             favoriteImageView.setOnClickListener { stationAdapterDelegate.onFavoriteClicked(station) }
 
-            distanceTextView.text = String.format(Locale.US, "%.3f EUS", station.distanceToCurrent)
+            val text = if (station.isCurrent) "Current station" else String.format(Locale.US, "%.3f EUS", station.distanceToCurrent)
+            distanceTextView.text = text
         }
     }
 
