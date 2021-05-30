@@ -16,9 +16,9 @@ import javax.inject.Singleton
 
 @Singleton
 class ApplicationRepository @Inject constructor(
-        private val spacecraftDatabase: SpacecraftDatabaseStore,
-        private val stationDatabase: SpaceStationDatabaseStore,
-        private val stationNetworkStore: SpaceStationNetworkStore
+    private val spacecraftDatabase: SpacecraftDatabaseStore,
+    private val stationDatabase: SpaceStationDatabaseStore,
+    private val stationNetworkStore: SpaceStationNetworkStore
 ) {
     private val TAG = "SpaceStationRepository"
 
@@ -26,25 +26,25 @@ class ApplicationRepository @Inject constructor(
 
     private fun getCurrentSpacecraft(): Spacecraft? {
         return spacecraftDatabase.getCurrentSpacecraft()
-                .subscribeOn(Schedulers.io())
-                .doOnError { t -> Log.e(TAG, "current space craft", t.cause) }
-                .blockingGet()
+            .subscribeOn(Schedulers.io())
+            .doOnError { t -> Log.e(TAG, "current space craft", t.cause) }
+            .blockingGet()
     }
 
     fun saveSpacecraft(name: String, durability: Int, speed: Int, capacity: Int, result: MediatorLiveData<Resource<Boolean?>>): Disposable {
         val spacecraft = Spacecraft(name, durability, speed, capacity, 100)
         return spacecraftDatabase.insert(spacecraft)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnComplete { currentSpaceCraft = getCurrentSpacecraft() }
-                .doOnSubscribe {
-                    result.value = Resource.loading(null)
-                }
-                .subscribe({
-                    result.value = Resource.success(true)
-                }, { e ->
-                    Resource.error(e.message!!, null)
-                })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnComplete { currentSpaceCraft = getCurrentSpacecraft() }
+            .doOnSubscribe {
+                result.value = Resource.loading(null)
+            }
+            .subscribe({
+                result.value = Resource.success(true)
+            }, { e ->
+                Resource.error(e.message!!, null)
+            })
     }
 
     fun loadStationList(result: MutableLiveData<Resource<List<SpaceStationEntity>>>): Disposable {
@@ -78,6 +78,7 @@ class ApplicationRepository @Inject constructor(
 
     private fun getStationsFromNetwork(path: String = BuildConfig.STATION_PATH): Completable {
         return stationNetworkStore.getStationList(path)
+            .observeOn(Schedulers.io())
             .map { entity ->
                 val databaseEntity: ArrayList<SpaceStationEntity> = ArrayList(entity.size)
                 for (item in entity) {

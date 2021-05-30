@@ -6,4 +6,5 @@
     <string name="search">Search</string>
     <string name="space_craft_name">Falcon 9</string>
     <string name="let_s_go">Let\'s go…</string>
+    <string name="favorite_error">Could not load favorite list!</string>
 </resources>
