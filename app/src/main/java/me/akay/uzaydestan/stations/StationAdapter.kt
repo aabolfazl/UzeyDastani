@@ -55,15 +55,15 @@ class StationAdapter constructor(val stationAdapterDelegate: StationAdapterDeleg
     }
 
     inner class StationViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val nameTextView: TextView = itemView.findViewById(R.id.station_name_textView)
-        private val capacityTextView: TextView = itemView.findViewById(R.id.station_ugs_capacity_textView)
-        private val distanceTextView: TextView = itemView.findViewById(R.id.station_distance_textView)
-        private val favoriteImageView: ImageView = itemView.findViewById(R.id.station_favorite_imageView)
-        private val travelButton: Button = itemView.findViewById(R.id.station_travel_button)
+        private val nameTextView: TextView = itemView.findViewById(R.id.tv_station_name)
+        private val capacityTextView: TextView = itemView.findViewById(R.id.tv_station_ugs_capacity)
+        private val distanceTextView: TextView = itemView.findViewById(R.id.tv_station_distance)
+        private val favoriteImageView: ImageView = itemView.findViewById(R.id.iv_station_favorite)
+        private val travelButton: Button = itemView.findViewById(R.id.btn_station_travel)
 
         fun bind(station: SpaceStationEntity) {
             nameTextView.text = station.name
-            capacityTextView.text = station.capacity.toString()
+            capacityTextView.text = String.format(Locale.US, "%d/%d", station.capacity, station.need)
             travelButton.visibility = if (station.missionComplete) View.INVISIBLE else View.VISIBLE
 
             val res = if (station.isFavorite) R.drawable.ic_favorite else R.drawable.ic_favorite_outline

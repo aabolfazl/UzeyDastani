@@ -7,30 +7,30 @@
     android:background="@drawable/shape_station_item_stroke">
 
     <TextView
-        android:id="@+id/station_ugs_capacity_textView"
+        android:id="@+id/tv_station_ugs_capacity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="2000/1000"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/station_distance_textView"
+        app:layout_constraintBottom_toTopOf="@+id/tv_station_distance"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.53" />
 
     <TextView
-        android:id="@+id/station_distance_textView"
+        android:id="@+id/tv_station_distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="200EUS"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/station_name_textView"
-        app:layout_constraintStart_toStartOf="@+id/station_ugs_capacity_textView"
-        app:layout_constraintTop_toBottomOf="@+id/station_ugs_capacity_textView" />
+        app:layout_constraintBottom_toTopOf="@+id/tv_station_name"
+        app:layout_constraintStart_toStartOf="@+id/tv_station_ugs_capacity"
+        app:layout_constraintTop_toBottomOf="@+id/tv_station_ugs_capacity" />
 
     <ImageView
-        android:id="@+id/station_favorite_imageView"
+        android:id="@+id/iv_station_favorite"
         android:layout_width="52dp"
         android:layout_height="52dp"
         android:layout_marginTop="8dp"
@@ -41,7 +41,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/station_name_textView"
+        android:id="@+id/tv_station_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
@@ -50,20 +50,20 @@
         android:textColor="@color/white"
         android:textSize="32sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/station_travel_button"
+        app:layout_constraintBottom_toTopOf="@+id/btn_station_travel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/station_distance_textView" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_station_distance" />
 
     <Button
-        android:id="@+id/station_travel_button"
+        android:id="@+id/btn_station_travel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:text="Travel!"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/station_name_textView"
-        app:layout_constraintStart_toStartOf="@+id/station_name_textView"
-        app:layout_constraintTop_toBottomOf="@+id/station_name_textView" />
+        app:layout_constraintEnd_toEndOf="@+id/tv_station_name"
+        app:layout_constraintStart_toStartOf="@+id/tv_station_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_station_name" />
 </androidx.constraintlayout.widget.ConstraintLayout>
