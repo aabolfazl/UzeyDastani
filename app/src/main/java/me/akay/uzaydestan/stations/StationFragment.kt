@@ -99,6 +99,7 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
                     adapter.setStations(result.data!!)
                     if (progressBarView.visibility != View.GONE && result.data.isNotEmpty()) {
                         progressBarView.visibility = View.GONE
+                        currentStationFavImageView.visibility = View.VISIBLE
                         recyclerView.animate().setDuration(100).alpha(1f).start()
                         backView.animate().setDuration(100).alpha(1f).start()
                         forwardView.animate().setDuration(100).alpha(1f).start()

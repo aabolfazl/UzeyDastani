@@ -44,7 +44,7 @@ class ApplicationRepository @Inject constructor(
             .subscribe({
                 result.value = Resource.success(true)
             }, { e ->
-                Resource.error(e.message!!, null)
+                Resource.error(e.toString(), null)
             })
     }
 
@@ -55,14 +55,13 @@ class ApplicationRepository @Inject constructor(
             .filter { it.isNotEmpty() }
             .map { entity ->
                 val currentSpacecraft = spacecraftDatabase.getCurrentSpacecraft()
+                if (currentSpacecraft.currentStation != null) {
+                    val currentStation = stationDatabase.findSpaceStationByName(currentSpacecraft.currentStation!!)
 
-                Log.i(TAG, "loadStationList: $currentSpacecraft")
-                val currentStation = stationDatabase.findSpaceStationByName(currentSpacecraft.currentStation!!)
-
-                for (item in entity) {
-                    item.calculateStationDistance(currentStation)
+                    for (item in entity) {
+                        item.calculateStationDistance(currentStation)
+                    }
                 }
-
                 return@map entity
             }
             .observeOn(AndroidSchedulers.mainThread())
@@ -72,7 +71,7 @@ class ApplicationRepository @Inject constructor(
             .subscribe({
                 result.value = Resource.success(it)
             }, { e ->
-                result.value = Resource.error(e.message!!, null)
+                result.value = Resource.error(e.toString(), null)
             })
     }
 
@@ -87,7 +86,7 @@ class ApplicationRepository @Inject constructor(
             .subscribe({
                 result.value = Resource.success(it)
             }, { e ->
-                result.value = Resource.error(e.message!!, null)
+                result.value = Resource.error(e.toString(), null)
             })
     }
 
@@ -101,7 +100,7 @@ class ApplicationRepository @Inject constructor(
             .subscribe({
                 result.value = Resource.success(it)
             }, { e ->
-                Resource.error(e.message!!, null)
+                Resource.error(e.toString(), null)
             })
     }
 
@@ -116,8 +115,8 @@ class ApplicationRepository @Inject constructor(
                 return@map databaseEntity
             }
             .flatMapCompletable { stations ->
-                return@flatMapCompletable stationDatabase.insertOrUpdate(stations)
-                    .mergeWith(updateCurrentStation(stations[0].name, true))
+                return@flatMapCompletable updateCurrentStation(stations[0].name, true)
+                    .mergeWith(stationDatabase.insertOrUpdate(stations))
             }
     }
 
