@@ -32,6 +32,9 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
     private lateinit var spacecraftNameTextView: TextView
     private lateinit var spacecraftDamageTextView: TextView
     private lateinit var currentStationTextView: TextView
+    private lateinit var UGSTextView: TextView
+    private lateinit var EUSTextView: TextView
+    private lateinit var DSTextView: TextView
     private lateinit var currentStationFavImageView: ImageView
     private lateinit var progressBarView: View
     private lateinit var tryAgainView: View
@@ -57,6 +60,10 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
         spacecraftNameTextView = view.findViewById(R.id.tv_station_spacecraft)
         spacecraftDamageTextView = view.findViewById(R.id.main_spacecraft_damage)
         currentStationTextView = view.findViewById(R.id.tv_station_current)
+        UGSTextView = view.findViewById(R.id.tc_station_UGS)
+        EUSTextView = view.findViewById(R.id.tc_station_EUS)
+        DSTextView = view.findViewById(R.id.tv_station_DS)
+
         progressBarView = view.findViewById(R.id.pb_station)
 
         recyclerView = view.findViewById(R.id.station_recyclerView)
@@ -117,6 +124,18 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
                 currentStationTextView.visibility = View.VISIBLE
                 currentStationFavImageView.visibility = View.VISIBLE
             }
+        })
+
+        viewModel.UGSLiveData.observe(viewLifecycleOwner, { data ->
+            UGSTextView.text = String.format("UGS:%d", data)
+        })
+
+        viewModel.EUSLiveData.observe(viewLifecycleOwner, { data ->
+            EUSTextView.text = String.format("EUS:%d", data)
+        })
+
+        viewModel.DSLiveData.observe(viewLifecycleOwner, { data ->
+            DSTextView.text = String.format("DS:%d", data)
         })
     }
 

@@ -19,22 +19,25 @@ class StationViewModel @Inject constructor(private val repository: ApplicationRe
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    val spaceStations: MutableLiveData<Resource<List<SpaceStationEntity>>> by lazy {
-        MutableLiveData<Resource<List<SpaceStationEntity>>>()
-    }
-
-    val currentSpaceStations: MutableLiveData<Resource<SpaceStationEntity>> by lazy {
-        MutableLiveData<Resource<SpaceStationEntity>>()
-    }
-
-    val spacecraftEntityLiveData: MutableLiveData<SpacecraftEntity> by lazy {
-        MutableLiveData<SpacecraftEntity>()
-    }
+    val spaceStations: MutableLiveData<Resource<List<SpaceStationEntity>>> = MutableLiveData()
+    val currentSpaceStations: MutableLiveData<Resource<SpaceStationEntity>> = MutableLiveData()
+    val spacecraftEntityLiveData: MutableLiveData<SpacecraftEntity> = MutableLiveData()
+    val UGSLiveData: MutableLiveData<Int> = MutableLiveData()
+    val EUSLiveData: MutableLiveData<Int> = MutableLiveData()
+    val DSLiveData: MutableLiveData<Int> = MutableLiveData()
 
     init {
         spacecraftEntityLiveData.value = repository.currentSpaceCraft
         compositeDisposable.add(repository.loadCurrentStation(currentSpaceStations))
         getStationsList()
+
+        val spacecraft = repository.currentSpaceCraft
+
+        if (spacecraft != null) {
+            UGSLiveData.value = spacecraft.capacity * 10000
+            EUSLiveData.value = spacecraft.speed * 20
+            DSLiveData.value = spacecraft.durability * 10000
+        }
     }
 
     fun didChangeFav(station: SpaceStationEntity) {
