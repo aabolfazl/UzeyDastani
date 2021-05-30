@@ -88,11 +88,14 @@
 
         <TextView
             android:id="@+id/tv_station_spacecraft"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
+            android:ellipsize="end"
             android:gravity="center_vertical"
+            android:maxLength="16"
+            android:maxLines="1"
             android:paddingStart="4dp"
             android:paddingTop="16dp"
             android:paddingEnd="16dp"
@@ -107,8 +110,10 @@
 
         <TextView
             android:id="@+id/main_spacecraft_damage"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="4dp"
             android:background="@drawable/shape_detail_box"
             android:gravity="center"
             android:padding="8dp"
@@ -123,8 +128,10 @@
 
         <TextView
             android:id="@+id/tv_station_counter"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="16dp"
             android:background="@drawable/shape_detail_box"
             android:gravity="center"
             android:padding="8dp"
@@ -201,11 +208,11 @@
             android:paddingStart="4dp"
             android:paddingTop="16dp"
             android:paddingEnd="16dp"
-            android:visibility="gone"
             android:paddingBottom="16dp"
             android:textColor="@color/white"
             android:textSize="32sp"
             android:textStyle="bold"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

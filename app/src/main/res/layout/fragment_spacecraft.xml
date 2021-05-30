@@ -70,7 +70,7 @@
         android:background="@drawable/shape_name_box"
         android:hint="@string/space_craft_name"
         android:imeOptions="actionDone"
-        android:maxLength="20"
+        android:maxLength="16"
         android:maxLines="1"
         android:padding="16dp"
         app:layout_constraintBottom_toTopOf="@+id/tv_spacecraft_durability"
