@@ -34,7 +34,7 @@ class StationViewModel @Inject constructor(private val repository: ApplicationRe
     init {
         spacecraftEntityLiveData.value = repository.currentSpaceCraft
         getStationsList()
-        repository.loadCurrentStation(currentSpaceStations)
+        compositeDisposable.add(repository.loadCurrentStation(currentSpaceStations))
 
     }
 
