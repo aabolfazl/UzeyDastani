@@ -10,8 +10,12 @@ import androidx.recyclerview.widget.RecyclerView
 import me.akay.uzaydestan.R
 import me.akay.uzaydestan.data.SpaceStationEntity
 
-class StationAdapter constructor(val stationAdapterDelegate: StationAdapterDelegate) :
-    RecyclerView.Adapter<StationAdapter.StationViewHolder>() {
+class StationAdapter constructor(val stationAdapterDelegate: StationAdapterDelegate) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private companion object {
+        const val EARTH_STATION = 0
+        const val OTHER_STATION = 1
+    }
 
     private var spaceStations: List<SpaceStationEntity> = ArrayList()
 
@@ -20,17 +24,28 @@ class StationAdapter constructor(val stationAdapterDelegate: StationAdapterDeleg
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StationViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_station, parent, false)
-        return StationViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (viewType == EARTH_STATION) {
+            EarthViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_earth, parent, false))
+        } else {
+            StationViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_station, parent, false))
+        }
     }
 
-    override fun onBindViewHolder(holder: StationViewHolder, position: Int) {
-        holder.bind(spaceStations[position])
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder.itemViewType == EARTH_STATION) {
+            (holder as EarthViewHolder).bind(spaceStations[position])
+        } else {
+            (holder as StationViewHolder).bind(spaceStations[position])
+        }
     }
 
     override fun getItemCount(): Int {
         return spaceStations.size
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (spaceStations[position].isEarth()) EARTH_STATION else OTHER_STATION
     }
 
     inner class StationViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -49,6 +64,20 @@ class StationAdapter constructor(val stationAdapterDelegate: StationAdapterDeleg
             favoriteImageView.setImageResource(res)
 
             travelButton.setOnClickListener { stationAdapterDelegate.onButtonClicked(station) }
+            favoriteImageView.setOnClickListener { stationAdapterDelegate.onFavoriteClicked(station) }
+        }
+    }
+
+    inner class EarthViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private val nameTextView: TextView = itemView.findViewById(R.id.tv_station_name)
+        private val favoriteImageView: ImageView = itemView.findViewById(R.id.iv_station_favorite)
+
+        fun bind(station: SpaceStationEntity) {
+            nameTextView.text = station.name
+
+            val res = if (station.isFavorite) R.drawable.ic_favorite else R.drawable.ic_favorite_outline
+            favoriteImageView.setImageResource(res)
+
             favoriteImageView.setOnClickListener { stationAdapterDelegate.onFavoriteClicked(station) }
         }
     }

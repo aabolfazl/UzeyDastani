@@ -20,4 +20,7 @@ class SpaceStationEntity(
         model.name, model.coordinateX, model.coordinateY, model.capacity,
         model.stock, model.need
     )
+
+    fun isEarth(): Boolean =
+        capacity == 0 && coordinateX == 0.0f && coordinateY == 0.0f && stock == 0 && need == 0
 }
