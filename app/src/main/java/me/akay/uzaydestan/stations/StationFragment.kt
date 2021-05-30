@@ -31,6 +31,10 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
     private lateinit var spacecraftNameTextView: TextView
     private lateinit var spacecraftDamageTextView: TextView
     private lateinit var currentSpacecraftTextView: TextView
+    private lateinit var progressBarView: View
+    private lateinit var tryAgainView: View
+    private lateinit var forwardView: View
+    private lateinit var backView: View
 
     private var adapter: StationAdapter = StationAdapter(this)
     private var currentPosition: Int = 0
@@ -44,7 +48,6 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
 
         val snapHelper = RecyclerViewSnapHelper(object : OnSelectedItemChange {
             override fun onSelectedItemChange(position: Int) {
-                Log.i(TAG, "onSelectedItemChange: $position")
                 currentPosition = position
             }
         })
@@ -52,16 +55,20 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
         spacecraftNameTextView = view.findViewById(R.id.tv_station_spacecraft)
         spacecraftDamageTextView = view.findViewById(R.id.main_spacecraft_damage)
         currentSpacecraftTextView = view.findViewById(R.id.tv_station_current)
+        progressBarView = view.findViewById(R.id.pb_station)
 
         recyclerView = view.findViewById(R.id.station_recyclerView)
         recyclerView.adapter = adapter
         snapHelper.attachToRecyclerView(recyclerView)
 
-        val forwardView: View = view.findViewById(R.id.iv_station_arrow_forward)
+        forwardView = view.findViewById(R.id.iv_station_arrow_forward)
         forwardView.setOnClickListener { goNextStation() }
 
-        val backView: View = view.findViewById(R.id.iv_station_arrow_back)
+        backView = view.findViewById(R.id.iv_station_arrow_back)
         backView.setOnClickListener { goPreviousStation() }
+
+        tryAgainView = view.findViewById(R.id.tv_station_tryAgain)
+        tryAgainView.setOnClickListener { viewModel.getStationsList() }
 
         return view
     }
@@ -74,15 +81,24 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
         })
 
         viewModel.spaceStations.observe(viewLifecycleOwner, { result ->
+            Log.i(TAG, "onViewCreated: " + result.status)
             when (result.status) {
                 Status.SUCCESS -> {
                     adapter.setStations(result.data!!)
+                    if (progressBarView.alpha != 0f && result.data.isNotEmpty()) {
+                        progressBarView.visibility = View.GONE
+                        recyclerView.animate().setDuration(100).alpha(1f).start()
+                        backView.animate().setDuration(100).alpha(1f).start()
+                        forwardView.animate().setDuration(100).alpha(1f).start()
+                    }
                 }
                 Status.ERROR -> {
-
+                    progressBarView.visibility = View.GONE
+                    tryAgainView.visibility = View.VISIBLE
                 }
                 Status.LOADING -> {
-
+                    progressBarView.visibility = View.VISIBLE
+                    tryAgainView.visibility = View.GONE
                 }
             }
         })
@@ -90,6 +106,7 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
         viewModel.currentSpaceStations.observe(viewLifecycleOwner, { result ->
             if (result.status == Status.SUCCESS) {
                 currentSpacecraftTextView.text = result.data?.name
+                currentSpacecraftTextView.visibility = View.VISIBLE
             }
         })
     }
@@ -103,9 +120,9 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
 
     private fun goNextStation() {
         val newPos = currentPosition + 1
-//        if (newPos < viewModel.spaceStations.value?.size ?: 0) {
-//            scrollTpStation(newPos)
-//        }
+        if (newPos < adapter.getStationsSize()) {
+            scrollTpStation(newPos)
+        }
     }
 
     private fun goPreviousStation() {

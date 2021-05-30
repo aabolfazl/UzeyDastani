@@ -59,7 +59,7 @@ class ApplicationRepository @Inject constructor(
             .subscribe({
                 result.value = Resource.success(it)
             }, { e ->
-                Resource.error(e.message!!, null)
+                result.value = Resource.error(e.message!!, null)
             })
     }
 

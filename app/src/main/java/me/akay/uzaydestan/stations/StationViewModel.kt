@@ -33,8 +33,7 @@ class StationViewModel @Inject constructor(private val repository: ApplicationRe
 
     init {
         spacecraftEntityLiveData.value = repository.currentSpaceCraft
-        compositeDisposable.add(repository.loadStationList(spaceStations))
-
+        getStationsList()
         repository.loadCurrentStation(currentSpaceStations)
 
     }
@@ -53,6 +52,10 @@ class StationViewModel @Inject constructor(private val repository: ApplicationRe
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe()
+    }
+
+    fun getStationsList() {
+        compositeDisposable.add(repository.loadStationList(spaceStations))
     }
 
 }

@@ -20,9 +20,13 @@ class StationAdapter constructor(val stationAdapterDelegate: StationAdapterDeleg
     private var spaceStations: List<SpaceStationEntity> = ArrayList()
 
     fun setStations(list: List<SpaceStationEntity>) {
+        if (list.isEmpty()) return
+
         spaceStations = list
         notifyDataSetChanged()
     }
+
+    fun getStationsSize(): Int = spaceStations.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == EARTH_STATION) {
@@ -41,7 +45,7 @@ class StationAdapter constructor(val stationAdapterDelegate: StationAdapterDeleg
     }
 
     override fun getItemCount(): Int {
-        return spaceStations.size
+        return getStationsSize()
     }
 
     override fun getItemViewType(position: Int): Int {

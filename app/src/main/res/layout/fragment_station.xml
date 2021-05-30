@@ -163,6 +163,7 @@
             android:id="@+id/station_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:alpha="0"
             android:minHeight="350dp"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -173,6 +174,7 @@
             android:id="@+id/iv_station_arrow_forward"
             android:layout_width="52dp"
             android:layout_height="0dp"
+            android:alpha="0"
             android:scaleType="centerInside"
             android:src="@drawable/ic_arrow_forward"
             app:layout_constraintBottom_toBottomOf="@+id/station_recyclerView"
@@ -183,6 +185,7 @@
             android:id="@+id/iv_station_arrow_back"
             android:layout_width="52dp"
             android:layout_height="0dp"
+            android:alpha="0"
             android:scaleType="centerInside"
             android:src="@drawable/ic_arrow_back"
             app:layout_constraintBottom_toBottomOf="@+id/station_recyclerView"
@@ -198,8 +201,8 @@
             android:paddingStart="4dp"
             android:paddingTop="16dp"
             android:paddingEnd="16dp"
+            android:visibility="gone"
             android:paddingBottom="16dp"
-            android:text="Soyle"
             android:textColor="@color/white"
             android:textSize="32sp"
             android:textStyle="bold"
@@ -207,6 +210,29 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/station_recyclerView" />
+
+        <ProgressBar
+            android:id="@+id/pb_station"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/station_recyclerView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/station_recyclerView"
+            app:layout_constraintTop_toBottomOf="@+id/et_station_search" />
+
+        <TextView
+            android:id="@+id/tv_station_tryAgain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/try_again"
+            android:textColor="@color/primary_text_color"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/station_recyclerView"
+            app:layout_constraintEnd_toEndOf="@+id/station_recyclerView"
+            app:layout_constraintStart_toStartOf="@+id/station_recyclerView"
+            app:layout_constraintTop_toBottomOf="@+id/et_station_search" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
