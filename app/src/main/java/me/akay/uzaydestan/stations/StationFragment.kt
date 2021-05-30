@@ -125,24 +125,15 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
                 currentStationFavImageView.visibility = View.VISIBLE
             }
         })
-
-        viewModel.UGSLiveData.observe(viewLifecycleOwner, { data ->
-            UGSTextView.text = String.format("UGS:%d", data)
-        })
-
-        viewModel.EUSLiveData.observe(viewLifecycleOwner, { data ->
-            EUSTextView.text = String.format("EUS:%d", data)
-        })
-
-        viewModel.DSLiveData.observe(viewLifecycleOwner, { data ->
-            DSTextView.text = String.format("DS:%d", data)
-        })
     }
 
-    private fun bindSpaceCraft(spacecraftEntity: SpacecraftEntity?) {
-        if (spacecraftEntity != null) {
-            spacecraftNameTextView.text = spacecraftEntity.name
-            spacecraftDamageTextView.text = spacecraftEntity.damage.toString()
+    private fun bindSpaceCraft(spacecraft: SpacecraftEntity?) {
+        if (spacecraft != null) {
+            spacecraftNameTextView.text = spacecraft.name
+            spacecraftDamageTextView.text = spacecraft.damage.toString()
+            EUSTextView.text = String.format("EUS:%d", spacecraft.speed * 20)
+            UGSTextView.text = String.format("UGS:%d", spacecraft.capacity * 10000)
+            DSTextView.text = String.format("DS:%d", spacecraft.durability * 10000)
         }
     }
 
