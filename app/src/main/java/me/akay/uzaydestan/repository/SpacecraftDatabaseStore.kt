@@ -1,6 +1,7 @@
 package me.akay.uzaydestan.repository
 
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Maybe
 import me.akay.uzaydestan.data.SpacecraftDAO
 import me.akay.uzaydestan.data.SpacecraftEntity
@@ -22,11 +23,16 @@ class SpacecraftDatabaseStore @Inject constructor(
 
     fun updateCurrentStation(name: String): Completable = Completable.defer {
         val spacecraft = dao.getSpacecraft()
+        spacecraft.currentStation = name
         return@defer update(spacecraft)
     }
 
     fun getCurrentSpacecraft(): Maybe<SpacecraftEntity> {
         return dao.getSpacecraftMaybe()
+    }
+
+    fun getCurrentSpacecraftFlowable(): Flowable<SpacecraftEntity> {
+        return dao.getSpacecraftFlowable()
     }
 
     fun deleteAll(): Completable = Completable.defer {

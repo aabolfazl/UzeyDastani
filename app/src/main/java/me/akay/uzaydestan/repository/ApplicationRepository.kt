@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.Completable
-import io.reactivex.Maybe
+import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -64,7 +64,7 @@ class ApplicationRepository @Inject constructor(
     }
 
     fun loadCurrentStation(result: MutableLiveData<Resource<SpaceStationEntity>>): Disposable {
-        return spacecraftDatabase.getCurrentSpacecraft()
+        return spacecraftDatabase.getCurrentSpacecraftFlowable()
             .subscribeOn(Schedulers.io())
             .flatMap { spacecraft -> getCurrentSpaceStation(spacecraft.currentStation) }
             .observeOn(AndroidSchedulers.mainThread())
@@ -116,8 +116,8 @@ class ApplicationRepository @Inject constructor(
             .subscribe()
     }
 
-    private fun getCurrentSpaceStation(name: String?): Maybe<SpaceStationEntity> {
-        return if (name != null) stationDatabase.findSpaceStationByName(name) else Maybe.empty()
+    private fun getCurrentSpaceStation(name: String?): Flowable<SpaceStationEntity> {
+        return if (name != null) stationDatabase.findSpaceStationByName(name) else Flowable.empty()
     }
 
     fun updateCurrentStation(name: String, remote: Boolean = false): Completable {

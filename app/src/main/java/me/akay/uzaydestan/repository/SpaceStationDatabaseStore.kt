@@ -2,7 +2,6 @@ package me.akay.uzaydestan.repository
 
 import io.reactivex.Completable
 import io.reactivex.Flowable
-import io.reactivex.Maybe
 import me.akay.uzaydestan.data.SpaceStationDAO
 import me.akay.uzaydestan.data.SpaceStationEntity
 import javax.inject.Inject
@@ -26,7 +25,7 @@ class SpaceStationDatabaseStore @Inject constructor(
         return dao.getSpaceStationListFlowable()
     }
 
-    fun findSpaceStationByName(name: String): Maybe<SpaceStationEntity> {
+    fun findSpaceStationByName(name: String): Flowable<SpaceStationEntity> {
         return dao.findStationByName(name)
     }
 

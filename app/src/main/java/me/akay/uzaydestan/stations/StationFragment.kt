@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -31,6 +30,7 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
     private lateinit var recyclerView: RecyclerView
     private lateinit var spacecraftNameTextView: TextView
     private lateinit var spacecraftDamageTextView: TextView
+    private lateinit var currentSpacecraftTextView: TextView
 
     private var adapter: StationAdapter = StationAdapter(this)
     private var currentPosition: Int = 0
@@ -49,17 +49,18 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
             }
         })
 
-        spacecraftNameTextView = view.findViewById(R.id.main_spaceCraft_name)
+        spacecraftNameTextView = view.findViewById(R.id.tv_station_spacecraft)
         spacecraftDamageTextView = view.findViewById(R.id.main_spacecraft_damage)
+        currentSpacecraftTextView = view.findViewById(R.id.tv_station_current)
 
-        recyclerView = view.findViewById(R.id.main_recyclerView)
+        recyclerView = view.findViewById(R.id.station_recyclerView)
         recyclerView.adapter = adapter
         snapHelper.attachToRecyclerView(recyclerView)
 
-        val forwardView: View = view.findViewById(R.id.main_arrow_forward)
+        val forwardView: View = view.findViewById(R.id.iv_station_arrow_forward)
         forwardView.setOnClickListener { goNextStation() }
 
-        val backView: View = view.findViewById(R.id.main_arrow_back)
+        val backView: View = view.findViewById(R.id.iv_station_arrow_back)
         backView.setOnClickListener { goPreviousStation() }
 
         return view
@@ -73,7 +74,6 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
         })
 
         viewModel.spaceStations.observe(viewLifecycleOwner, { result ->
-            Log.i(TAG, "onViewCreated: ")
             when (result.status) {
                 Status.SUCCESS -> {
                     adapter.setStations(result.data!!)
@@ -87,8 +87,10 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
             }
         })
 
-        viewModel.currentSpaceStations.observe(viewLifecycleOwner, Observer { result ->
-            Log.i("abbasiLog", "onViewCreated: " + result.data?.name)
+        viewModel.currentSpaceStations.observe(viewLifecycleOwner, { result ->
+            if (result.status == Status.SUCCESS) {
+                currentSpacecraftTextView.text = result.data?.name
+            }
         })
     }
 

@@ -2,7 +2,6 @@ package me.akay.uzaydestan.data
 
 import androidx.room.*
 import io.reactivex.Flowable
-import io.reactivex.Maybe
 
 @Dao
 interface SpaceStationDAO {
@@ -25,6 +24,6 @@ interface SpaceStationDAO {
     fun getFavoriteSpaceStationList(): Flowable<List<SpaceStationEntity>>
 
     @Query("SELECT * FROM space_station WHERE name == :stationName")
-    fun findStationByName(stationName: String): Maybe<SpaceStationEntity>
+    fun findStationByName(stationName: String): Flowable<SpaceStationEntity>
 
 }

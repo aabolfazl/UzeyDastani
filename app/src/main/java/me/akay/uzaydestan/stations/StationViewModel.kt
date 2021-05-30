@@ -2,7 +2,9 @@ package me.akay.uzaydestan.stations
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import me.akay.uzaydestan.data.SpaceStationEntity
 import me.akay.uzaydestan.data.SpacecraftEntity
 import me.akay.uzaydestan.helper.Resource
@@ -47,10 +49,10 @@ class StationViewModel @Inject constructor(private val repository: ApplicationRe
     }
 
     fun travelToStation(station: SpaceStationEntity) {
-//        repository.updateCurrentStation(station.name)
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe()
+        repository.updateCurrentStation(station.name)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe()
     }
 
 }

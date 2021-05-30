@@ -1,6 +1,7 @@
 package me.akay.uzaydestan.data
 
 import androidx.room.*
+import io.reactivex.Flowable
 import io.reactivex.Maybe
 
 @Dao
@@ -13,6 +14,9 @@ interface SpacecraftDAO {
 
     @Query("SELECT * FROM spacecraft LIMIT 1")
     fun getSpacecraftMaybe(): Maybe<SpacecraftEntity>
+
+    @Query("SELECT * FROM spacecraft LIMIT 1")
+    fun getSpacecraftFlowable(): Flowable<SpacecraftEntity>
 
     @Query("SELECT * FROM spacecraft LIMIT 1")
     fun getSpacecraft(): SpacecraftEntity
