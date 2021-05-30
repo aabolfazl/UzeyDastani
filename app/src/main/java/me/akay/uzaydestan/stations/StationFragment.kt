@@ -14,6 +14,7 @@ import dagger.android.support.DaggerFragment
 import me.akay.uzaydestan.R
 import me.akay.uzaydestan.data.SpaceStationEntity
 import me.akay.uzaydestan.data.SpacecraftEntity
+import me.akay.uzaydestan.helper.AndroidUtils
 import me.akay.uzaydestan.helper.Status
 import me.akay.uzaydestan.stations.RecyclerViewSnapHelper.OnSelectedItemChange
 import javax.inject.Inject
@@ -35,6 +36,7 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
     private lateinit var UGSTextView: TextView
     private lateinit var EUSTextView: TextView
     private lateinit var DSTextView: TextView
+    private lateinit var counterTextView: TextView
     private lateinit var currentStationFavImageView: ImageView
     private lateinit var progressBarView: View
     private lateinit var tryAgainView: View
@@ -63,6 +65,7 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
         UGSTextView = view.findViewById(R.id.tc_station_UGS)
         EUSTextView = view.findViewById(R.id.tc_station_EUS)
         DSTextView = view.findViewById(R.id.tv_station_DS)
+        counterTextView = view.findViewById(R.id.tv_station_counter)
 
         progressBarView = view.findViewById(R.id.pb_station)
 
@@ -126,15 +129,22 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
                 currentStationFavImageView.visibility = View.VISIBLE
             }
         })
+
+        viewModel.timerLiveData.observe(viewLifecycleOwner, { time ->
+            counterTextView.text = String.format("%ds", time)
+            if (time <= 3) {
+                AndroidUtils.shakeView(counterTextView, 5, 0)
+            }
+        })
     }
 
     private fun bindSpaceCraft(spacecraft: SpacecraftEntity?) {
         if (spacecraft != null) {
             spacecraftNameTextView.text = spacecraft.name
             spacecraftDamageTextView.text = spacecraft.damage.toString()
-            EUSTextView.text = String.format("EUS:%d", spacecraft.speed * 20)
-            UGSTextView.text = String.format("UGS:%d", spacecraft.capacity * 10000)
-            DSTextView.text = String.format("DS:%d", spacecraft.durability * 10000)
+            EUSTextView.text = String.format("EUS:%d", spacecraft.getEUS())
+            UGSTextView.text = String.format("UGS:%d", spacecraft.getUGS())
+            DSTextView.text = String.format("DS:%d", spacecraft.getDS())
         }
     }
 

@@ -12,4 +12,10 @@ data class SpacecraftEntity(
     val capacity: Int,
     val damage: Int,
     var currentStation: String? = null // must use server side stations Unique identifier
-)
+) {
+
+    fun getEUS(): Int = speed * 20
+    fun getUGS(): Int = capacity * 10000
+    fun getDS(): Int = durability * 10000
+
+}
