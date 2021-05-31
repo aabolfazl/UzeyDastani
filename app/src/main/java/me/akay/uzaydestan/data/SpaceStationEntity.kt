@@ -16,7 +16,7 @@ class SpaceStationEntity(
     var capacity: Int,
     var stock: Int,
     var need: Int,
-    var missionComplete: Boolean = false,
+    var status: Int = MissionStatus.UN_COMPLETE.ordinal,
     var isFavorite: Boolean = false
 ) {
     @Ignore

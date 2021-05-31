@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import me.akay.uzaydestan.R
+import me.akay.uzaydestan.data.MissionStatus
 import me.akay.uzaydestan.data.SpaceStationEntity
 import java.util.*
 import kotlin.collections.ArrayList
@@ -64,7 +65,7 @@ class StationAdapter constructor(val stationAdapterDelegate: StationAdapterDeleg
         fun bind(station: SpaceStationEntity) {
             nameTextView.text = station.name
             capacityTextView.text = String.format(Locale.US, "%d/%d", station.capacity, station.need)
-            travelButton.visibility = if (station.missionComplete) View.INVISIBLE else View.VISIBLE
+            travelButton.visibility = if (station.status == MissionStatus.COMPLETED.ordinal) View.INVISIBLE else View.VISIBLE
             travelButton.isEnabled = station.isCurrent.not()
 
             val res = if (station.isFavorite) R.drawable.ic_favorite else R.drawable.ic_favorite_outline

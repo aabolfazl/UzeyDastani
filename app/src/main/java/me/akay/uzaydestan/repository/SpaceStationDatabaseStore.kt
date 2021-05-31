@@ -3,6 +3,7 @@ package me.akay.uzaydestan.repository
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Maybe
+import me.akay.uzaydestan.data.MissionStatus
 import me.akay.uzaydestan.data.SpaceStationDAO
 import me.akay.uzaydestan.data.SpaceStationEntity
 import javax.inject.Inject
@@ -45,6 +46,14 @@ class SpaceStationDatabaseStore @Inject constructor(
 
     fun update(spaceStation: List<SpaceStationEntity>): Completable = Completable.defer {
         dao.update(spaceStation)
+        return@defer Completable.complete()
+    }
+
+    fun missionComplete(destStation: SpaceStationEntity): Completable = Completable.defer {
+        destStation.status = MissionStatus.COMPLETED.ordinal
+        destStation.need = 0
+        destStation.stock = destStation.capacity
+        dao.updateStation(destStation)
         return@defer Completable.complete()
     }
 

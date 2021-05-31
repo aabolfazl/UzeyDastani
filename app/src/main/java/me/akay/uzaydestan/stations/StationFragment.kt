@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import me.akay.uzaydestan.R
+import me.akay.uzaydestan.data.SpaceCraftStatus
 import me.akay.uzaydestan.data.SpaceStationEntity
 import me.akay.uzaydestan.data.SpacecraftEntity
 import me.akay.uzaydestan.helper.AndroidUtils
@@ -92,7 +93,9 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.spacecraftEntityLiveData.observe(viewLifecycleOwner, { spacecraft ->
-            bindSpaceCraft(spacecraft)
+            if (spacecraft.status == Status.SUCCESS) {
+                bindSpaceCraft(spacecraft.data)
+            }
         })
 
         viewModel.spaceStations.observe(viewLifecycleOwner, { result ->
@@ -120,7 +123,10 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
         })
 
         viewModel.currentSpaceStations.observe(viewLifecycleOwner, { result ->
+//            Log.e("SpaceStationRepository", "onViewCreated: ")
             if (result.status == Status.SUCCESS) {
+                Log.i("AbbasiLog", "currentSpaceStations: ${result.data?.toString()} ")
+
                 currentStationTextView.text = result.data?.name
                 val res = if (result.data!!.isFavorite) R.drawable.ic_favorite else R.drawable.ic_favorite_outline
                 currentStationFavImageView.setImageResource(res)
@@ -142,9 +148,13 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
         if (spacecraft != null) {
             spacecraftNameTextView.text = spacecraft.name
             spacecraftDamageTextView.text = spacecraft.damage.toString()
-            EUSTextView.text = String.format("EUS:%d", spacecraft.getEUS())
-            UGSTextView.text = String.format("UGS:%d", spacecraft.getUGS())
-            DSTextView.text = String.format("DS:%d", spacecraft.getDS())
+            EUSTextView.text = String.format("EUS:%.2f", spacecraft.EUS)
+            UGSTextView.text = String.format("UGS:%d", spacecraft.UGS)
+            DSTextView.text = String.format("DS:%d", spacecraft.DS)
+
+            if (spacecraft.status == SpaceCraftStatus.IN_MISSION.ordinal) {
+                AndroidUtils.shakeView(spacecraftNameTextView, 5, 0)
+            }
         }
     }
 

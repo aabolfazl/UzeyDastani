@@ -1,10 +1,9 @@
 package me.akay.uzaydestan.stations
 
-import android.os.CountDownTimer
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import me.akay.uzaydestan.data.MissionStatus
+import me.akay.uzaydestan.data.SpaceCraftStatus
 import me.akay.uzaydestan.data.SpaceStationEntity
 import me.akay.uzaydestan.data.SpacecraftEntity
 import me.akay.uzaydestan.dependencyInjection.BaseViewModel
@@ -19,48 +18,43 @@ class StationViewModel @Inject constructor(private val repository: ApplicationRe
 
     val spaceStations: MutableLiveData<Resource<List<SpaceStationEntity>>> = MutableLiveData()
     val currentSpaceStations: MutableLiveData<Resource<SpaceStationEntity>> = MutableLiveData()
-    val spacecraftEntityLiveData: MutableLiveData<SpacecraftEntity> = MutableLiveData()
+    val spacecraftEntityLiveData: MutableLiveData<Resource<SpacecraftEntity>> = MutableLiveData()
     val timerLiveData: MutableLiveData<Long> = MutableLiveData()
 
-    private val timer: CountDownTimer
 
     init {
-        spacecraftEntityLiveData.value = repository.currentSpaceCraft
+        addDisposable(repository.loadSpaceCraft(spacecraftEntityLiveData))
         addDisposable(repository.loadCurrentStation(currentSpaceStations))
         getStationsList()
-
-        timer = object : CountDownTimer(repository.currentSpaceCraft?.getEUS()!!.toLong() * 1000, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                Log.i(TAG, "onTick: " + millisUntilFinished / 1000)
-                timerLiveData.postValue(millisUntilFinished / 1000)
-            }
-
-            override fun onFinish() {
-                Log.i(TAG, "onFinish: ")
-            }
-        }
-        timer.start()
     }
 
     fun didChangeFav(station: SpaceStationEntity) {
         addDisposable(repository.toggleFavorite(station))
     }
 
-    fun travelToStation(station: SpaceStationEntity) {
-        if (station.name.equals(repository.currentSpaceCraft?.currentStation, true)) {
-            Log.e(TAG, "travelToStation: current error")
+    fun travelToStation(destStation: SpaceStationEntity) {
+        val spacecraft = repository.currentSpaceCraft
+        if (destStation.name.equals(spacecraft?.currentStation, true)) {
+            Log.e("AbbasiLog", "travelToStation: current error")
             return
         }
 
-        if (station.missionComplete) {
-            Log.e(TAG, "travelToStation: mission complete")
+        if (destStation.status == MissionStatus.COMPLETED.ordinal) {
+            Log.e("AbbasiLog", "travelToStation: mission complete")
             return
         }
 
-        repository.updateCurrentStation(station.name)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe()
+        if (destStation.status == MissionStatus.IN_PROGRESS.ordinal) {
+            Log.e("AbbasiLog", "travelToStation: mission in progress")
+            return
+        }
+
+        if (spacecraft?.status != SpaceCraftStatus.IDLE.ordinal) {
+            Log.e("AbbasiLog", "travelToStation: spacecraft in mission")
+        }
+
+        repository.startTravelToDest(destStation)
+
     }
 
     fun getStationsList() {
