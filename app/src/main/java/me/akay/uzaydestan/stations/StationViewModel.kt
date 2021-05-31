@@ -9,9 +9,7 @@ import me.akay.uzaydestan.dependencyInjection.BaseViewModel
 import me.akay.uzaydestan.helper.Resource
 import me.akay.uzaydestan.repository.ApplicationRepository
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class StationViewModel @Inject constructor(private val repository: ApplicationRepository) : BaseViewModel() {
     private val TAG = "MainViewModel"
 

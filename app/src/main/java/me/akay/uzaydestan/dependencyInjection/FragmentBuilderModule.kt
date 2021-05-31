@@ -9,7 +9,7 @@ import me.akay.uzaydestan.stations.StationFragment
 @Module
 abstract class FragmentBuilderModule {
     @ContributesAndroidInjector
-    abstract fun contributeMainFragment(): StationFragment
+    abstract fun contributeStationFragment(): StationFragment
 
     @ContributesAndroidInjector
     abstract fun contributeSpaceCraftFragment(): SpacecraftFragment
