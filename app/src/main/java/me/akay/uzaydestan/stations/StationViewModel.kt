@@ -35,37 +35,33 @@ class StationViewModel @Inject constructor(private val repository: ApplicationRe
     fun travelToStation(destStation: SpaceStationEntity) {
         val spacecraft = repository.getCurrentSpacecraft() ?: return
 
-        if (destStation.name.equals(spacecraft.currentStation, true)) {
-            errorLiveData.value = "current error"
-            return
+        when {
+            destStation.name.equals(spacecraft.currentStation, true) -> {
+                errorLiveData.value = "current error"
+                return
+            }
+            destStation.status == MissionStatus.COMPLETED.ordinal -> {
+                errorLiveData.value = "mission complete"
+                return
+            }
+            destStation.status == MissionStatus.IN_PROGRESS.ordinal -> {
+                errorLiveData.value = "mission in progress"
+                return
+            }
+            spacecraft.status != SpaceCraftStatus.IDLE.ordinal -> {
+                errorLiveData.value = "spacecraft in mission"
+                return
+            }
+            spacecraft.canTravel().not() -> {
+                errorLiveData.value = "Ds error"
+                return
+            }
+            spacecraft.UGS < destStation.need -> {
+                errorLiveData.value = "UGS error"
+                return
+            }
+            else -> addDisposable(repository.startTravelToDest(destStation))
         }
-
-        if (destStation.status == MissionStatus.COMPLETED.ordinal) {
-            errorLiveData.value = "mission complete"
-            return
-        }
-
-        if (destStation.status == MissionStatus.IN_PROGRESS.ordinal) {
-            errorLiveData.value = "mission in progress"
-            return
-        }
-
-        if (spacecraft.status != SpaceCraftStatus.IDLE.ordinal) {
-            errorLiveData.value = "spacecraft in mission"
-            return
-        }
-
-        if (spacecraft.canTravel().not()) {
-            errorLiveData.value = "Ds error"
-            return
-        }
-
-        if (spacecraft.UGS < destStation.need) {
-            errorLiveData.value = "UGS error"
-            return
-        }
-
-        addDisposable(repository.startTravelToDest(destStation))
     }
 
     fun getStationsList() {

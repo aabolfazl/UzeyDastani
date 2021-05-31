@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import me.akay.uzaydestan.R
-import me.akay.uzaydestan.data.SpaceCraftStatus
 import me.akay.uzaydestan.data.SpaceStationEntity
 import me.akay.uzaydestan.data.SpacecraftEntity
 import me.akay.uzaydestan.helper.AndroidUtils
@@ -159,10 +158,6 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
             EUSTextView.text = String.format("EUS:%.2f", spacecraft.EUS)
             UGSTextView.text = String.format("UGS:%d", spacecraft.UGS)
             DSTextView.text = String.format("DS:%d", spacecraft.DS)
-
-            if (spacecraft.status == SpaceCraftStatus.IN_MISSION.ordinal) {
-                AndroidUtils.shakeView(spacecraftNameTextView, 5, 0)
-            }
         }
     }
 
