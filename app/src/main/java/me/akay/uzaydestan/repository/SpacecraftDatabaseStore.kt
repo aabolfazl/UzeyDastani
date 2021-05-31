@@ -18,7 +18,7 @@ class SpacecraftDatabaseStore @Inject constructor(
         return@defer Completable.complete()
     }
 
-    fun update(spacecraftEntity: SpacecraftEntity): Completable = Completable.defer {
+    private fun update(spacecraftEntity: SpacecraftEntity): Completable = Completable.defer {
         dao.update(spacecraftEntity)
         return@defer Completable.complete()
     }
@@ -34,7 +34,7 @@ class SpacecraftDatabaseStore @Inject constructor(
     }
 
 
-    fun getCurrentSpacecraft(): SpacecraftEntity {
+    private fun getCurrentSpacecraft(): SpacecraftEntity {
         return dao.getSpacecraft()
     }
 
