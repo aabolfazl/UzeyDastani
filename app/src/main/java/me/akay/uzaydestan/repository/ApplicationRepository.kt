@@ -122,6 +122,22 @@ class ApplicationRepository @Inject constructor(
             })
     }
 
+    fun startDsTimer(result: MutableLiveData<Long>): Disposable {
+        val ds = getCurrentSpacecraft()?.DS!! / 1000
+        val list = IntRange(0, ds).toList().reversed()
+        return Completable.fromObservable(Observable
+            .interval(0, 1, TimeUnit.SECONDS)
+            .map { i -> list[i.toInt()] }
+            .doOnNext { result.postValue(it.toLong()) }
+            .take(list.size.toLong()).flatMap {
+                spacecraftDatabase.updateDs(1000).toObservable()
+            }).subscribeOn(Schedulers.io())
+            .andThen(setDefaultStation())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError { t -> Log.e(TAG, "current space craft", t.cause) }
+            .subscribe()
+    }
+
     private fun getStationsFromNetwork(path: String = BuildConfig.STATION_PATH): Completable {
         return stationNetworkStore.getStationList(path)
             .subscribeOn(Schedulers.io())
@@ -167,14 +183,15 @@ class ApplicationRepository @Inject constructor(
         return stationDatabase.updateSpaceStation(destStation)
             .subscribeOn(Schedulers.computation())
             .andThen(spacecraftDatabase.setMissionStatus2(SpaceCraftStatus.IN_MISSION))
-            .andThen(starMissionCountDown(destStation))
+            .andThen(starMissionCountDownTimer(destStation))
             .andThen(stationDatabase.missionComplete(destStation))
             .andThen(updateCurrentStation(destStation.name))
             .andThen(spacecraftDatabase.updateUGS(destStation.need, true))
-            .subscribe({ Log.i(TAG, "DONEEEEE: " + Thread.currentThread().name) })
+            .doOnError { t -> Log.e(TAG, "current space craft", t.cause) }
+            .subscribe { Log.i(TAG, "DONEEEEE: ") }
     }
 
-    private fun starMissionCountDown(destStation: SpaceStationEntity): Completable =
+    private fun starMissionCountDownTimer(destStation: SpaceStationEntity): Completable =
         Completable.defer {
             val ceil = ceil(destStation.distanceToCurrent.toDouble()).toInt()
             val list = IntRange(1, ceil).toList()

@@ -24,6 +24,7 @@ class StationViewModel @Inject constructor(private val repository: ApplicationRe
     init {
         addDisposable(repository.loadSpaceCraft(spacecraftEntityLiveData))
         addDisposable(repository.loadCurrentStation(currentSpaceStations))
+        addDisposable(repository.startDsTimer(timerLiveData))
         getStationsList()
     }
 
@@ -34,27 +35,32 @@ class StationViewModel @Inject constructor(private val repository: ApplicationRe
     fun travelToStation(destStation: SpaceStationEntity) {
         val spacecraft = repository.getCurrentSpacecraft()
         if (destStation.name.equals(spacecraft?.currentStation, true)) {
-            errorLiveData.value = "travelToStation: current error"
+            errorLiveData.value = "current error"
             return
         }
 
         if (destStation.status == MissionStatus.COMPLETED.ordinal) {
-            errorLiveData.value = "travelToStation: mission complete"
+            errorLiveData.value = "mission complete"
             return
         }
 
         if (destStation.status == MissionStatus.IN_PROGRESS.ordinal) {
-            errorLiveData.value = "travelToStation: mission in progress"
+            errorLiveData.value = "mission in progress"
             return
         }
 
         if (spacecraft?.status != SpaceCraftStatus.IDLE.ordinal) {
-            errorLiveData.value = "travelToStation: spacecraft in mission"
+            errorLiveData.value = "spacecraft in mission"
+            return
+        }
+
+        if (spacecraft.DS <= 0) {
+            errorLiveData.value = "Ds error"
             return
         }
 
         if (spacecraft.UGS < destStation.need) {
-            errorLiveData.value = "travelToStation: cannot full station"
+            errorLiveData.value = "UGS error"
             return
         }
 

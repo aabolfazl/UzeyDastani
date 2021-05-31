@@ -124,10 +124,7 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
         })
 
         viewModel.currentSpaceStations.observe(viewLifecycleOwner, { result ->
-//            Log.e("SpaceStationRepository", "onViewCreated: ")
             if (result.status == Status.SUCCESS) {
-                Log.i("AbbasiLog", "currentSpaceStations: ${result.data?.toString()} ")
-
                 currentStationTextView.text = result.data?.name
                 val res = if (result.data!!.isFavorite) R.drawable.ic_favorite else R.drawable.ic_favorite_outline
                 currentStationFavImageView.setImageResource(res)
@@ -141,7 +138,13 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
             counterTextView.text = String.format("%ds", time)
             if (time <= 3) {
                 AndroidUtils.shakeView(counterTextView, 5, 0)
+
+                if (time == 0L) {
+                    Toast.makeText(context, "Back to Earth!", Toast.LENGTH_SHORT).show()
+                    scrollTpStation(0)
+                }
             }
+
         })
 
         viewModel.errorLiveData.observe(viewLifecycleOwner, { res ->
