@@ -63,15 +63,7 @@ class SpacecraftDatabaseStore @Inject constructor(
         return@defer Single.just(spacecraft)
     }
 
-    fun setMissionStatus(inMission: SpaceCraftStatus): Single<SpacecraftEntity> =
-        Single.defer {
-            val spacecraft = getCurrentSpacecraft()
-            spacecraft.status = inMission.ordinal
-            dao.update(spacecraft)
-            return@defer Single.just(spacecraft)
-        }
-
-    fun setMissionStatus2(inMission: SpaceCraftStatus): Completable = Completable.defer {
+    fun setMissionStatus(inMission: SpaceCraftStatus): Completable = Completable.defer {
         val spacecraft = getCurrentSpacecraft()
         spacecraft.status = inMission.ordinal
         dao.update(spacecraft)
@@ -81,7 +73,8 @@ class SpacecraftDatabaseStore @Inject constructor(
     fun updateUGS(UGS: Int, toIdle: Boolean = false): Completable = Completable.defer {
         val spacecraft = getCurrentSpacecraft()
         spacecraft.UGS -= UGS
-        spacecraft.DS -= 10
+        val finalDs = spacecraft.DS - 10
+        spacecraft.DS = if (finalDs < 0) 0 else finalDs
         spacecraft.status = if (toIdle) SpaceCraftStatus.IDLE.ordinal else spacecraft.status
         dao.update(spacecraft)
         return@defer Completable.complete()

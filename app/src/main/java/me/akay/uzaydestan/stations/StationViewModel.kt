@@ -33,8 +33,9 @@ class StationViewModel @Inject constructor(private val repository: ApplicationRe
     }
 
     fun travelToStation(destStation: SpaceStationEntity) {
-        val spacecraft = repository.getCurrentSpacecraft()
-        if (destStation.name.equals(spacecraft?.currentStation, true)) {
+        val spacecraft = repository.getCurrentSpacecraft() ?: return
+
+        if (destStation.name.equals(spacecraft.currentStation, true)) {
             errorLiveData.value = "current error"
             return
         }
@@ -49,12 +50,12 @@ class StationViewModel @Inject constructor(private val repository: ApplicationRe
             return
         }
 
-        if (spacecraft?.status != SpaceCraftStatus.IDLE.ordinal) {
+        if (spacecraft.status != SpaceCraftStatus.IDLE.ordinal) {
             errorLiveData.value = "spacecraft in mission"
             return
         }
 
-        if (spacecraft.DS <= 0) {
+        if (spacecraft.canTravel().not()) {
             errorLiveData.value = "Ds error"
             return
         }

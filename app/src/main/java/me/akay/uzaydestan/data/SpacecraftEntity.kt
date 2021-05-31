@@ -18,4 +18,6 @@ data class SpacecraftEntity(
 ) {
     @PrimaryKey
     var id: Long = 0
+
+    fun canTravel(): Boolean = DS / 1000 > 0
 }

@@ -182,7 +182,7 @@ class ApplicationRepository @Inject constructor(
         destStation.status = MissionStatus.IN_PROGRESS.ordinal
         return stationDatabase.updateSpaceStation(destStation)
             .subscribeOn(Schedulers.computation())
-            .andThen(spacecraftDatabase.setMissionStatus2(SpaceCraftStatus.IN_MISSION))
+            .andThen(spacecraftDatabase.setMissionStatus(SpaceCraftStatus.IN_MISSION))
             .andThen(starMissionCountDownTimer(destStation))
             .andThen(stationDatabase.missionComplete(destStation))
             .andThen(updateCurrentStation(destStation.name))
