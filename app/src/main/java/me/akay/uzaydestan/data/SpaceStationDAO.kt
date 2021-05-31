@@ -33,4 +33,7 @@ interface SpaceStationDAO {
     @Query("SELECT * FROM space_station WHERE name == :stationName")
     fun findStationByName(stationName: String): SpaceStationEntity
 
+    @Query("DELETE FROM space_station")
+    fun deleteAll()
+
 }

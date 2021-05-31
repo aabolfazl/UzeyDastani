@@ -36,6 +36,10 @@ class SpaceCraftViewModel @Inject constructor(private val repository: Applicatio
         MutableLiveData<Int>(currentScore())
     }
 
+    init {
+        addDisposable(repository.deleteAllStations())
+    }
+
     private fun checkScoreNum() {
         scoreLiveData.value = currentScore()
     }

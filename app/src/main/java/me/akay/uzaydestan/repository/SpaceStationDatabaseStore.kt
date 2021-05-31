@@ -60,4 +60,9 @@ class SpaceStationDatabaseStore @Inject constructor(
     fun getFavoriteSpaceStationList(): Flowable<List<SpaceStationEntity>> {
         return dao.getFavoriteSpaceStationList()
     }
+
+    fun deleteAll(): Completable = Completable.defer {
+        dao.deleteAll()
+        return@defer Completable.complete()
+    }
 }

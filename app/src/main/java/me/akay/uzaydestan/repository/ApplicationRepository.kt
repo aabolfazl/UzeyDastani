@@ -8,6 +8,7 @@ import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.Action
 import io.reactivex.schedulers.Schedulers
 import me.akay.uzaydestan.BuildConfig
 import me.akay.uzaydestan.data.MissionStatus
@@ -188,5 +189,10 @@ class ApplicationRepository @Inject constructor(
 
         }
 
+    fun deleteAllStations(): Disposable {
+        return stationDatabase.deleteAll()
+            .subscribeOn(Schedulers.io())
+            .subscribe(Action { Log.i(TAG, "deleteAllStations: ") })
+    }
 
 }
