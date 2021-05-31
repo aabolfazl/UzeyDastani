@@ -2,6 +2,7 @@ package me.akay.uzaydestan.data
 
 import androidx.room.*
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 
 @Dao
 interface SpaceStationDAO {
@@ -16,6 +17,9 @@ interface SpaceStationDAO {
 
     @Query("SELECT * FROM space_station")
     fun getSpaceStationListFlowable(): Flowable<List<SpaceStationEntity>>
+
+    @Query("SELECT * FROM space_station LIMIT 1")
+    fun findFirstSpaceStationMaybe(): Maybe<SpaceStationEntity?>
 
     @Update
     fun updateStation(spaceStationEntity: SpaceStationEntity)

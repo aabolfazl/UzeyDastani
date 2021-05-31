@@ -33,7 +33,7 @@ class ApplicationRepository @Inject constructor(
     }
 
     fun saveSpacecraft(name: String, durability: Int, speed: Int, capacity: Int, result: MediatorLiveData<Resource<Boolean?>>): Disposable {
-        val spacecraft = SpacecraftEntity(name, durability, speed, capacity, 100)
+        val spacecraft = SpacecraftEntity(name, durability, speed, capacity, 100, null)
         return spacecraftDatabase.insert(spacecraft)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -51,6 +51,7 @@ class ApplicationRepository @Inject constructor(
     fun loadStationList(result: MutableLiveData<Resource<List<SpaceStationEntity>>>): Disposable {
         return stationDatabase.getSpaceStationList()
             .mergeWith(getStationsFromNetwork())
+            .mergeWith(setDefaultStation())
             .subscribeOn(Schedulers.io())
             .filter { it.isNotEmpty() }
             .map { entity ->
@@ -106,7 +107,7 @@ class ApplicationRepository @Inject constructor(
 
     private fun getStationsFromNetwork(path: String = BuildConfig.STATION_PATH): Completable {
         return stationNetworkStore.getStationList(path)
-            .observeOn(Schedulers.io())
+            .subscribeOn(Schedulers.io())
             .map { entity ->
                 val databaseEntity: ArrayList<SpaceStationEntity> = ArrayList(entity.size)
                 for (item in entity) {
@@ -115,8 +116,16 @@ class ApplicationRepository @Inject constructor(
                 return@map databaseEntity
             }
             .flatMapCompletable { stations ->
-                return@flatMapCompletable updateCurrentStation(stations[0].name, true)
+                return@flatMapCompletable updateCurrentStation(stations[0].name)
                     .mergeWith(stationDatabase.insertOrUpdate(stations))
+            }
+    }
+
+    private fun setDefaultStation(): Completable {
+        return stationDatabase.findFirstStationMaybe()
+            .subscribeOn(Schedulers.io())
+            .flatMapCompletable { stations ->
+                return@flatMapCompletable updateCurrentStation(stations.name)
             }
     }
 
@@ -132,7 +141,7 @@ class ApplicationRepository @Inject constructor(
         return if (name != null) stationDatabase.findSpaceStationByNameFlowable(name) else Flowable.empty()
     }
 
-    fun updateCurrentStation(name: String, remote: Boolean = false): Completable {
-        return if (currentSpaceCraft?.currentStation == null || !remote) spacecraftDatabase.updateCurrentStation(name) else Completable.complete()
+    fun updateCurrentStation(name: String): Completable {
+        return spacecraftDatabase.updateCurrentStation(name)
     }
 }

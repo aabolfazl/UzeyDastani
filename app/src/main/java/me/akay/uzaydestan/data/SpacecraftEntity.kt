@@ -5,7 +5,6 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "spacecraft")
 data class SpacecraftEntity(
-    @PrimaryKey
     val name: String,
     val durability: Int,
     val speed: Int,
@@ -13,6 +12,8 @@ data class SpacecraftEntity(
     val damage: Int,
     var currentStation: String? = null // must use server side stations Unique identifier
 ) {
+    @PrimaryKey
+    var id: Long = 0
 
     fun getEUS(): Int = speed * 20
     fun getUGS(): Int = capacity * 10000
