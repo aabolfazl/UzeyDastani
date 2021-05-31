@@ -28,9 +28,7 @@ class ApplicationRepository @Inject constructor(
 ) {
     private val TAG = "SpaceStationRepository"
 
-    var currentSpaceCraft: SpacecraftEntity? = getCurrentSpacecraft()
-
-    private fun getCurrentSpacecraft(): SpacecraftEntity? {
+    fun getCurrentSpacecraft(): SpacecraftEntity? {
         return spacecraftDatabase.getCurrentSpacecraftMaybe()
             .subscribeOn(Schedulers.io())
             .doOnError { t -> Log.e(TAG, "current space craft", t.cause) }
@@ -43,7 +41,6 @@ class ApplicationRepository @Inject constructor(
             .subscribeOn(Schedulers.io())
             .mergeWith(setDefaultStation())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnComplete { currentSpaceCraft = getCurrentSpacecraft() }
             .doOnSubscribe {
                 result.value = Resource.loading(null)
             }

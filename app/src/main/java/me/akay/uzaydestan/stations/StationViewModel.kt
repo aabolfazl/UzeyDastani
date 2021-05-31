@@ -1,6 +1,5 @@
 package me.akay.uzaydestan.stations
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import me.akay.uzaydestan.data.MissionStatus
 import me.akay.uzaydestan.data.SpaceCraftStatus
@@ -20,7 +19,7 @@ class StationViewModel @Inject constructor(private val repository: ApplicationRe
     val currentSpaceStations: MutableLiveData<Resource<SpaceStationEntity>> = MutableLiveData()
     val spacecraftEntityLiveData: MutableLiveData<Resource<SpacecraftEntity>> = MutableLiveData()
     val timerLiveData: MutableLiveData<Long> = MutableLiveData()
-
+    val errorLiveData: MutableLiveData<String> = MutableLiveData()
 
     init {
         addDisposable(repository.loadSpaceCraft(spacecraftEntityLiveData))
@@ -33,28 +32,33 @@ class StationViewModel @Inject constructor(private val repository: ApplicationRe
     }
 
     fun travelToStation(destStation: SpaceStationEntity) {
-        val spacecraft = repository.currentSpaceCraft
+        val spacecraft = repository.getCurrentSpacecraft()
         if (destStation.name.equals(spacecraft?.currentStation, true)) {
-            Log.e("AbbasiLog", "travelToStation: current error")
+            errorLiveData.value = "travelToStation: current error"
             return
         }
 
         if (destStation.status == MissionStatus.COMPLETED.ordinal) {
-            Log.e("AbbasiLog", "travelToStation: mission complete")
+            errorLiveData.value = "travelToStation: mission complete"
             return
         }
 
         if (destStation.status == MissionStatus.IN_PROGRESS.ordinal) {
-            Log.e("AbbasiLog", "travelToStation: mission in progress")
+            errorLiveData.value = "travelToStation: mission in progress"
             return
         }
 
         if (spacecraft?.status != SpaceCraftStatus.IDLE.ordinal) {
-            Log.e("AbbasiLog", "travelToStation: spacecraft in mission")
+            errorLiveData.value = "travelToStation: spacecraft in mission"
+            return
         }
 
-        repository.startTravelToDest(destStation)
+        if (spacecraft.UGS < destStation.need) {
+            errorLiveData.value = "travelToStation: cannot full station"
+            return
+        }
 
+        addDisposable(repository.startTravelToDest(destStation))
     }
 
     fun getStationsList() {

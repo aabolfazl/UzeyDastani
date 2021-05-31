@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -141,6 +142,10 @@ class StationFragment : DaggerFragment(), StationAdapterDelegate {
             if (time <= 3) {
                 AndroidUtils.shakeView(counterTextView, 5, 0)
             }
+        })
+
+        viewModel.errorLiveData.observe(viewLifecycleOwner, { res ->
+            Toast.makeText(context, res, Toast.LENGTH_SHORT).show()
         })
     }
 
